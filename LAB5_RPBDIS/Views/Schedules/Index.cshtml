@@ -1,0 +1,122 @@
+﻿@model IEnumerable<LAB5_RPBDIS.Models.Schedule>
+
+@{
+    ViewData["Title"] = "Записи расписания";
+
+    var page = (int)ViewData["Page"]; 
+    var pageSize = (int)ViewData["PageSize"]; 
+    var totalPages = (int)ViewData["TotalPages"];
+}
+
+<h1>Записи расписания</h1>
+
+<p>
+    <a asp-action="Create">Добавить новую запись</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                День недели
+            </th>
+            <th>
+                Поезд
+            </th>
+            <th>
+                Остановка
+            </th>
+            <th>
+                Время прибыия
+            </th>
+            <th>
+                Время отправки
+            </th>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+            <th></th>
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DayOfWeek)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Train.TrainNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Stop.Name)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.ArrivalTime)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.DepartureTime)
+            </td>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+                <td>
+                <a asp-action="Edit" asp-route-id="@item.ScheduleId">Редактировать</a> |
+                <a asp-action="Details" asp-route-id="@item.ScheduleId">Подробно</a> |
+                <a asp-action="Delete" asp-route-id="@item.ScheduleId">Удалить</a>
+                        
+                </td>
+            }
+        </tr>
+}
+    </tbody>
+</table>
+
+<div>
+    @if (page > 2 )
+    {
+        <span class="btn btn-primary">
+            <a href="@Url.Action("Index", new { page = 1, pageSize })" class="btn btn-primary">1</a>
+        </span>
+    }
+    @for (int i = page - 1; i <= totalPages; i++)
+    {
+        if (page == totalPages)
+        {
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = totalPages-1, pageSize })" class="btn btn-primary">@(totalPages-1)</a>
+            </span>
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary active">@totalPages</a>
+            </span>
+            break;
+        }
+        if (page == totalPages-1)
+        {
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = totalPages-2, pageSize })" class="btn btn-primary">@(totalPages -2)</a>
+            </span>
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = totalPages-1, pageSize })" class="btn btn-primary active">@(totalPages-1)</a>
+            </span>
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary">@totalPages</a>
+            </span>
+            break;
+        }
+        if (i>0 && i <= totalPages)
+        {
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = i, pageSize })" class="btn btn-primary @(page == i ? "active" : "")">@i</a>
+            </span> 
+        }
+        if(i==page+1)
+        {
+            break;
+        }
+    }
+    @if ((totalPages - page) >= 2 && totalPages>3)
+    {
+        <span class="btn btn-primary">
+            <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary @(page == totalPages ? "active" : "")">@totalPages</a>
+        </span>
+    }
+</div>

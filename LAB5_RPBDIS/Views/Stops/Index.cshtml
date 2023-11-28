@@ -1,0 +1,79 @@
+﻿@model IEnumerable<LAB5_RPBDIS.Models.Stop>
+
+@{
+    ViewData["Title"] = "Остановки";
+    var isRailwayStationValue = ViewData["IsRailwayStation"] as bool?;
+    var hasWaitingRoomValue = ViewData["HasWaitingRoom"] as bool?;
+}
+
+<h1>Остановки</h1>
+
+<p>
+    <a asp-action="Create">Добавить новую запись</a>
+</p>
+<p>
+    Укажите данные для фильтрации
+</p>
+<form method="get" action="@Url.Action("Index")">
+    <div class="form-group">
+        <label for="isRailwayStation">ЖД станция:</label>
+        <select class="form-control" id="isRailwayStation" name="isRailwayStation">
+            <option value="">Да и Нет</option>
+            <option value="true" selected="@(isRailwayStationValue.HasValue && isRailwayStationValue.Value)">Да</option>
+            <option value="false" selected="@(isRailwayStationValue.HasValue && !isRailwayStationValue.Value)">Нет</option>
+        </select>
+    </div>
+    <div class="form-group">
+        <label for="hasWaitingRoom">Зал ожидания:</label>
+        <select class="form-control" id="hasWaitingRoom" name="hasWaitingRoom">
+            <option value="">Да и Нет</option>
+            <option value="true" selected="@(hasWaitingRoomValue.HasValue && hasWaitingRoomValue.Value)">Да</option>
+            <option value="false" selected="@(hasWaitingRoomValue.HasValue && !hasWaitingRoomValue.Value)">Нет</option>
+        </select>
+    </div>
+    <button type="submit" class="btn btn-primary">Filter</button>
+</form>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Название
+            </th>
+            <th>
+                ЖД Станция
+            </th>
+            <th>
+                Комната ожидания
+            </th>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model)
+        {
+            <tr>
+                <td>
+                    @Html.DisplayFor(modelItem => item.Name)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.IsRailwayStation)
+                </td>
+                <td>
+                    @Html.DisplayFor(modelItem => item.HasWaitingRoom)
+                </td>
+                @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+                {
+                    <td>
+                        <a asp-action="Edit" asp-route-id="@item.StopId">Редактировать</a> |
+                        <a asp-action="Details" asp-route-id="@item.StopId">Подробно</a> |
+                        <a asp-action="Delete" asp-route-id="@item.StopId">Удалить</a>
+                    </td>
+                }
+            </tr>
+        }
+    </tbody>
+</table>

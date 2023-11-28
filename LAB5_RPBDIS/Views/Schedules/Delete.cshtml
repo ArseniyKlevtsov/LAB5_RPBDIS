@@ -1,0 +1,51 @@
+﻿@model LAB5_RPBDIS.Models.Schedule
+
+@{
+    ViewData["Title"] = "Удаление";
+}
+
+<h1>Удалени: запись расписания</h1>
+
+<h3>Вы уверены что хотите удалить эту запись?</h3>
+<div>
+    <h4>Запись расписания</h4>
+    <hr />
+    <dl class="row">
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DayOfWeek)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DayOfWeek)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Train)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Train.TrainNumber)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.Stop)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.Stop.Name)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.ArrivalTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.ArrivalTime)
+        </dd>
+        <dt class = "col-sm-2">
+            @Html.DisplayNameFor(model => model.DepartureTime)
+        </dt>
+        <dd class = "col-sm-10">
+            @Html.DisplayFor(model => model.DepartureTime)
+        </dd>
+    </dl>
+    
+    <form asp-action="Delete">
+        <input type="hidden" asp-for="ScheduleId" />
+        <input type="submit" value="Delete" class="btn btn-danger" /> |
+        <a asp-action="Index">Назадлt</a>
+    </form>
+</div>

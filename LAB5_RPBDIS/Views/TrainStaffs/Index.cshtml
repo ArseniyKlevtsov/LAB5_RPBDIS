@@ -1,0 +1,53 @@
+﻿@model IEnumerable<LAB5_RPBDIS.Models.TrainStaff>
+
+@{
+    ViewData["Title"] = "Работники поездов";
+}
+
+<h1>Работники поездов</h1>
+
+<p>
+    <a asp-action="Create">Добавить новую запись</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                День недели
+            </th>
+            <th>
+                Поезд
+            </th>
+            <th>
+                Сотрудник
+            </th>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.DayOfWeek)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Train.TrainNumber)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Employee.EmployeeName)
+            </td>
+                @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+                {
+                <td>
+                        <a asp-action="Edit" asp-route-id="@item.TrainStaffId">Редактировать</a> |
+                        <a asp-action="Details" asp-route-id="@item.TrainStaffId">Подробно</a> |
+                        <a asp-action="Delete" asp-route-id="@item.TrainStaffId">Удалить</a>
+                </td>
+                }
+        </tr>
+}
+    </tbody>
+</table>

@@ -1,0 +1,59 @@
+﻿@model IEnumerable<LAB5_RPBDIS.Models.Employee>
+
+@{
+    ViewData["Title"] = "Работники";
+}
+
+<h1>Работники</h1>
+
+<p>
+    <a asp-action="Create">Добавить новую запись</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Имя
+            </th>
+            <th>
+                Возраст
+            </th>
+            <th>
+                Опыт работы в годах
+            </th>
+            <th>
+                Должность
+            </th>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+            <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.EmployeeName)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.age)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.WorkExperience)
+            </td>
+            <td>
+                @Html.DisplayFor(modelItem => item.Position.PositionName)
+            </td>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+                <td>
+                    <a asp-action="Edit" asp-route-id="@item.EmployeeId">Изменить</a> |
+                    <a asp-action="Details" asp-route-id="@item.EmployeeId">Подробно</a> |
+                    <a asp-action="Delete" asp-route-id="@item.EmployeeId">Удалить</a>
+                </td>
+            }
+        </tr>
+}
+    </tbody>
+</table>

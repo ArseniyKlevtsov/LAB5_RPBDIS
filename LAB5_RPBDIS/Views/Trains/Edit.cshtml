@@ -1,0 +1,47 @@
+﻿@model LAB5_RPBDIS.Models.Train
+@{
+    await Html.RenderPartialAsync("_ValidationScriptsPartial");
+}
+@{
+    ViewData["Title"] = "Редактирование";
+}
+
+<h1>Редактирование: поезд</h1>
+
+<h4>Train</h4>
+<hr />
+<div class="row">
+    <div class="col-md-4">
+        <form asp-action="Edit">
+            <div asp-validation-summary="ModelOnly" class="text-danger"></div>
+            <input type="hidden" asp-for="TrainId" />
+            <div class="form-group">
+                <label asp-for="TrainNumber" class="control-label"></label>
+                <input asp-for="TrainNumber" class="form-control" />
+                <span asp-validation-for="TrainNumber" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="DistanceInKm" class="control-label"></label>
+                <input asp-for="DistanceInKm" class="form-control" data-val="true" data-val-float="Please enter a valid float number." />
+                <span asp-validation-for="DistanceInKm" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="IsBrandedTrain" class="control-label"></label>
+                <input asp-for="IsBrandedTrain" class="form-control" />
+                <span asp-validation-for="IsBrandedTrain" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <label asp-for="TrainTypeId" class="control-label"></label>
+                <select asp-for="TrainTypeId" class="form-control" asp-items="ViewBag.TrainTypeId"></select>
+                <span asp-validation-for="TrainTypeId" class="text-danger"></span>
+            </div>
+            <div class="form-group">
+                <input type="submit" value="Save" class="btn btn-primary" />
+            </div>
+        </form>
+    </div>
+</div>
+
+<div>
+    <a asp-action="Index">Назад к списку</a>
+</div>

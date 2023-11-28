@@ -1,0 +1,62 @@
+﻿@model IEnumerable<LAB5_RPBDIS.Models.TrainType>
+
+@{
+    ViewData["Title"] = "Типы поездов";
+
+    var page = (int)ViewData["Page"]; 
+    var pageSize = (int)ViewData["PageSize"]; 
+    var totalItems = Model.Count();
+    var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
+}
+<h1>Типы поездов</h1>
+
+<p>
+    <a asp-action="Create">Добавить новую запись</a>
+</p>
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Тип поезда
+            </th>
+            @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+            {
+                <th></th>
+            }
+        </tr>
+    </thead>
+    <tbody>
+@foreach (var item in Model) {
+        <tr>
+            <td>
+                @Html.DisplayFor(modelItem => item.TypeName)
+            </td>
+                @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
+                {
+                <td>
+                        <a asp-action="Edit" asp-route-id="@item.TrainTypeId">Редактировать</a> |
+                        <a asp-action="Details" asp-route-id="@item.TrainTypeId">Подробно</a> |
+                        <a asp-action="Delete" asp-route-id="@item.TrainTypeId">Удалить</a>
+                </td>
+                }
+        </tr>
+}
+    </tbody>
+</table>
+<span class="btn btn-primary">
+    @for (int i = page - 1; i <= totalPages; i++)
+    {
+        if(i<1)
+        {
+            continue;
+        }
+        if(i>page+1)
+        {
+            break;
+        }
+        if (i >= 1 && i <= totalPages)
+        {
+            <a href="@Url.Action("Index", new { page = i, pageSize })" class="btn btn-primary @(page == i ? "active" : "")">@i</a>
+        }
+    }
+</span>
