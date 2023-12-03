@@ -1,10 +1,19 @@
-﻿namespace LAB5_RPBDIS.Models
+﻿using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
+
+namespace LAB5_RPBDIS.Models
 {
     public class Employee
     {
         public int EmployeeId { get; set; }
+
+        [Display(Name = "Имя сотрудника")]
         public string? EmployeeName { get; set; }
+
+        [Display(Name = "Возраст")]
         public int? age { get; set; }
+
+        [Display(Name = "Опыт работы")]
         public float? WorkExperience { get; set; }
 
         public int PositionID { get; set; }

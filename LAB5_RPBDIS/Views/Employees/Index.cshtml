@@ -13,16 +13,16 @@
     <thead>
         <tr>
             <th>
-                Имя
+                @Html.DisplayNameFor(model => model.EmployeeName)
             </th>
             <th>
-                Возраст
+                @Html.DisplayNameFor(model => model.age)
             </th>
             <th>
-                Опыт работы в годах
+                @Html.DisplayNameFor(model => model.WorkExperience)
             </th>
             <th>
-                Должность
+                @Html.DisplayNameFor(model => model.Position)
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {

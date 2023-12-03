@@ -2,6 +2,7 @@ using LAB5_RPBDIS.Data;
 using LAB5_RPBDIS.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
+using System.Globalization;
 
 namespace LAB5_RPBDIS
 {
@@ -49,6 +50,10 @@ namespace LAB5_RPBDIS
 
             app.UseDbInitializer();
 
+            CultureInfo culture = new CultureInfo("ru-RU");
+            culture.NumberFormat.NumberDecimalSeparator = ".";
+            CultureInfo.DefaultThreadCurrentCulture = culture;
+            CultureInfo.DefaultThreadCurrentUICulture = culture;
 
             app.MapControllerRoute(
                 name: "default",

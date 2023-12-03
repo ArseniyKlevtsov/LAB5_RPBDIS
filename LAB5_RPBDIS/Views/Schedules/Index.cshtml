@@ -17,19 +17,19 @@
     <thead>
         <tr>
             <th>
-                День недели
+                @Html.DisplayNameFor(model => model.DayOfWeek)
             </th>
             <th>
-                Поезд
+                @Html.DisplayNameFor(model => model.Train)
             </th>
             <th>
-                Остановка
+                @Html.DisplayNameFor(model => model.Stop)
             </th>
             <th>
-                Время прибыия
+                @Html.DisplayNameFor(model => model.ArrivalTime)
             </th>
             <th>
-                Время отправки
+                @Html.DisplayNameFor(model => model.DepartureTime)
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {

@@ -9,6 +9,7 @@ using LAB5_RPBDIS.Data;
 using LAB5_RPBDIS.Models;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
+using Microsoft.AspNetCore.Http;
 
 namespace LAB5_RPBDIS.Controllers
 {
@@ -22,37 +23,70 @@ namespace LAB5_RPBDIS.Controllers
         }
 
         // GET: Stops
-        public async Task<IActionResult> Index(bool? isRailwayStation, bool? hasWaitingRoom)
+        // GET: Stops
+        public async Task<IActionResult> Index(string? isRailwayStation, string? hasWaitingRoom)
         {
-            // Загрузка сохраненных значений фильтрации из куки
-            if (!isRailwayStation.HasValue)
+            // если запрос без параметров 
+            // бёрём из куки сохраннёные значения, если их нет то стандартные
+            if(isRailwayStation ==null && hasWaitingRoom==null)
             {
-                isRailwayStation = bool.Parse(Request.Cookies["isRailwayStation"] ?? "false");
-            }
-            else
-            {
-                // Сохранение значения фильтрации в куки
-                Response.Cookies.Append("isRailwayStation", isRailwayStation.ToString());
+                hasWaitingRoom = Request.Cookies["hasWaitingRoom"] ?? "trueadnfalse";
+                isRailwayStation = Request.Cookies["isRailwayStation"] ?? "trueadnfalse";
             }
 
-            if (!hasWaitingRoom.HasValue)
-            {
-                hasWaitingRoom = bool.Parse(Request.Cookies["hasWaitingRoom"] ?? "false");
-            }
-            else
-            {
-                Response.Cookies.Append("hasWaitingRoom", hasWaitingRoom.ToString());
-            }
+            // переменные для сортировки в LINQ
+            bool isRailwayStationBool, hasWaitingRoomBool;
 
+            // возвращаемый списко остановок
+            List<Stop> stops;
+
+            // ложим во viewdata данные, для выбора нужной опции в селектах
             ViewData["IsRailwayStation"] = isRailwayStation;
             ViewData["HasWaitingRoom"] = hasWaitingRoom;
 
-            // Получение списка остановок в зависимости от фильтров
-            var stops = await _context.Stops
-                .Where(s => (!isRailwayStation.HasValue || s.IsRailwayStation == isRailwayStation.Value) &&
-                            (!hasWaitingRoom.HasValue || s.HasWaitingRoom == hasWaitingRoom.Value))
+            // сохранение в куки выбранные опции
+            Response.Cookies.Append("isRailwayStation", isRailwayStation);
+            Response.Cookies.Append("hasWaitingRoom", hasWaitingRoom);
+
+            // выбрано Да и Нет и там и там
+            if (isRailwayStation == "trueadnfalse" && hasWaitingRoom == "trueadnfalse")
+            {
+                stops = await _context.Stops
+                .ToListAsync();
+                return View(stops);
+            }
+
+            // выбрано Да и Нет в первом месте
+            if (isRailwayStation == "trueadnfalse" && hasWaitingRoom != "trueadnfalse")
+            {
+                bool.TryParse(hasWaitingRoom, out hasWaitingRoomBool);
+                
+                stops = await _context.Stops
+                    .Where(s => s.HasWaitingRoom == hasWaitingRoomBool)
                 .ToListAsync();
 
+                return View(stops);
+            }
+
+            // выбрано Да и Нет в втором месте
+            if (isRailwayStation != "trueadnfalse" && hasWaitingRoom == "trueadnfalse")
+            {
+                bool.TryParse(isRailwayStation, out isRailwayStationBool);
+
+                stops = await _context.Stops
+                    .Where(s => s.IsRailwayStation == isRailwayStationBool)
+                .ToListAsync();
+
+                return View(stops);
+            }
+
+            
+            bool.TryParse(isRailwayStation, out isRailwayStationBool);
+            bool.TryParse(hasWaitingRoom, out hasWaitingRoomBool);
+
+            stops = await _context.Stops
+                .Where(s => (s.IsRailwayStation == isRailwayStationBool) && (s.HasWaitingRoom == hasWaitingRoomBool))
+                .ToListAsync();
             return View(stops);
         }
         // GET: Stops/Details/5

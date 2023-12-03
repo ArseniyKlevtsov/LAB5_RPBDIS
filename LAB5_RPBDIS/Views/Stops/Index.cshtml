@@ -2,8 +2,8 @@
 
 @{
     ViewData["Title"] = "Остановки";
-    var isRailwayStationValue = ViewData["IsRailwayStation"] as bool?;
-    var hasWaitingRoomValue = ViewData["HasWaitingRoom"] as bool?;
+    string isRailwayStationValue = ViewData["IsRailwayStation"] as string;
+    string hasWaitingRoomValue = ViewData["HasWaitingRoom"] as string;
 }
 
 <h1>Остановки</h1>
@@ -18,33 +18,33 @@
     <div class="form-group">
         <label for="isRailwayStation">ЖД станция:</label>
         <select class="form-control" id="isRailwayStation" name="isRailwayStation">
-            <option value="">Да и Нет</option>
-            <option value="true" selected="@(isRailwayStationValue.HasValue && isRailwayStationValue.Value)">Да</option>
-            <option value="false" selected="@(isRailwayStationValue.HasValue && !isRailwayStationValue.Value)">Нет</option>
+            <option value="trueadnfalse">Да и Нет</option>
+            <option value="true">Да</option>
+            <option value="false">Нет</option>
         </select>
     </div>
     <div class="form-group">
         <label for="hasWaitingRoom">Зал ожидания:</label>
         <select class="form-control" id="hasWaitingRoom" name="hasWaitingRoom">
-            <option value="">Да и Нет</option>
-            <option value="true" selected="@(hasWaitingRoomValue.HasValue && hasWaitingRoomValue.Value)">Да</option>
-            <option value="false" selected="@(hasWaitingRoomValue.HasValue && !hasWaitingRoomValue.Value)">Нет</option>
+            <option value="trueadnfalse">Да и Нет</option>
+            <option value="true">Да</option>
+            <option value="false">Нет</option>
         </select>
     </div>
-    <button type="submit" class="btn btn-primary">Filter</button>
+    <button type="submit" class="btn btn-primary">Отфильтровать</button>
 </form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                Название
+                @Html.DisplayNameFor(model => model.Name)
             </th>
             <th>
-                ЖД Станция
+                @Html.DisplayNameFor(model => model.IsRailwayStation)
             </th>
             <th>
-                Комната ожидания
+                @Html.DisplayNameFor(model => model.HasWaitingRoom)
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {
@@ -60,10 +60,24 @@
                     @Html.DisplayFor(modelItem => item.Name)
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.IsRailwayStation)
+                    @if (item.IsRailwayStation ==true)
+                    {
+                        <p>Да</p>
+                    }
+                    else
+                    {
+                        <p>Нет</p>
+                    }
                 </td>
                 <td>
-                    @Html.DisplayFor(modelItem => item.HasWaitingRoom)
+                    @if (item.HasWaitingRoom == true)
+                    {
+                        <p>Да</p>
+                    }
+                    else
+                    {
+                        <p>Нет</p>
+                    }
                 </td>
                 @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
                 {
@@ -77,3 +91,25 @@
         }
     </tbody>
 </table>
+
+<script>
+    // Получение элементов селектов
+    var isRailwayStationSelect = document.getElementById("isRailwayStation");
+    var hasWaitingRoomSelect = document.getElementById("hasWaitingRoom");
+
+    // Установка выбранного значения для селекта "ЖД станция"
+    for (var i = 0; i < isRailwayStationSelect.options.length; i++) {
+        if (isRailwayStationSelect.options[i].value === "@isRailwayStationValue") {
+            isRailwayStationSelect.options[i].selected = true;
+            break;
+        }
+    }
+
+    // Установка выбранного значения для селекта "Зал ожидания"
+    for (var j = 0; j < hasWaitingRoomSelect.options.length; j++) {
+        if (hasWaitingRoomSelect.options[j].value === "@hasWaitingRoomValue") {
+            hasWaitingRoomSelect.options[j].selected = true;
+            break;
+        }
+    }
+</script>
