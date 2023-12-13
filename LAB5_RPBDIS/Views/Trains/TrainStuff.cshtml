@@ -1,0 +1,46 @@
+﻿@model RailwayTrafficSolution.Models.Train
+
+@{
+    ViewData["Title"] = "Сторудники поезда";
+}
+
+<h2>Сотрудники поезда @Model.TrainNumber в день недели: @ViewBag.DayOfWeek</h2>
+
+<table class="table">
+    <thead>
+        <tr>
+            <th>
+                Имя
+            </th>
+            <th>
+                Возраст
+            </th>
+            <th>
+                Опыт работы
+            </th>
+            <th>
+                Должность
+            </th>
+        </tr>
+    </thead>
+    <tbody>
+        @foreach (var item in Model.TrainStaffs)
+        {
+            <tr>
+                <td>
+                    @item.Employee.EmployeeName
+                </td>
+                <td>
+                    @item.Employee.age
+                </td>
+                <td>
+                    @item.Employee.WorkExperience
+                </td>
+                <td>
+                    @item.Employee.Position.PositionName;
+                </td>
+            </tr>
+        }
+    </tbody>
+</table>
+<a asp-asp-controller="Trains" asp-action="Details" asp-route-id="@Model?.TrainId">Назад к поезду</a>

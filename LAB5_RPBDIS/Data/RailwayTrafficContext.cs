@@ -24,5 +24,46 @@ namespace RailwayTrafficSolution.Data
         public DbSet<Schedule> Schedules { get; set; }
         public DbSet<TrainStaff> TrainStaffs { get; set; }
 
+        protected override void OnModelCreating(ModelBuilder modelBuilder)
+        {
+            base.OnModelCreating(modelBuilder);
+            // настрйока связи many-to-many: Train и Stop через Schedule
+            modelBuilder
+            .Entity<Train>()
+            .HasMany(t => t.Stops)
+            .WithMany(s => s.Trains)
+            .UsingEntity<Schedule>(
+               j => j
+                .HasOne(pt => pt.Stop)
+                .WithMany(t => t.Schedules)
+                .HasForeignKey(pt => pt.StopId),
+            j => j
+                .HasOne(pt => pt.Train)
+                .WithMany(p => p.Schedules)
+                .HasForeignKey(pt => pt.TrainId),
+            j =>
+            {
+                j.ToTable("Schedules");
+            });
+
+            // настрйока связи many-to-many: Train и Employee через TrainStaff
+            modelBuilder
+            .Entity<Train>()
+            .HasMany(t => t.Employees)
+            .WithMany(e => e.Trains)
+            .UsingEntity<TrainStaff>(
+               j => j
+                .HasOne(pt => pt.Employee)
+                .WithMany(t => t.TrainStaffs)
+                .HasForeignKey(pt => pt.EmployeeId),
+            j => j
+                .HasOne(pt => pt.Train)
+                .WithMany(p => p.TrainStaffs)
+                .HasForeignKey(pt => pt.TrainId),
+            j =>
+            {
+                j.ToTable("TrainStaffs");
+            });
+        }
     }
 }

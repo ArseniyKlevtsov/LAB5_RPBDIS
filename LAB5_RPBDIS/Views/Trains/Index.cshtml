@@ -4,7 +4,7 @@
     ViewData["Title"] = "Index";
 }
 
-<h1>Index</h1>
+<h1>Поезда</h1>
 
 <p>
     <a asp-action="Create">Добавить новую запись</a>
@@ -40,7 +40,14 @@
                 @Html.DisplayFor(modelItem => item.DistanceInKm)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.IsBrandedTrain)
+                    @if (item.IsBrandedTrain == true)
+                    {
+                        <p>Да</p>
+                    }
+                    else
+                    {
+                        <p>Нет</p>
+                    }
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.TrainType.TypeName)

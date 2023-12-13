@@ -91,7 +91,7 @@ namespace RailwayTrafficSolution.Controllers
         }
         // GET: Stops/Details/5
 
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? searchStartTimeString, string? searchEndTimeString)
         {
             if (id == null || _context.Stops == null)
             {
@@ -99,12 +99,27 @@ namespace RailwayTrafficSolution.Controllers
             }
 
             var stop = await _context.Stops
+                .Include(s => s.Schedules)
+                    .ThenInclude(s => s.Train)
                 .FirstOrDefaultAsync(m => m.StopId == id);
             if (stop == null)
             {
                 return NotFound();
             }
+            if (!String.IsNullOrEmpty(searchStartTimeString))
+            {
+                int startTime = int.Parse(searchStartTimeString);
+                stop.Schedules = stop.Schedules.Where(s => s.ArrivalTime.HasValue && s.ArrivalTime.Value.Hours >= startTime).ToList();
+                ViewBag.StartTime = startTime;
+            }
 
+            if (!String.IsNullOrEmpty(searchEndTimeString))
+            {
+                int endTime = int.Parse(searchEndTimeString);
+                stop.Schedules = stop.Schedules.Where(s => s.ArrivalTime.HasValue && s.ArrivalTime.Value.Hours <= endTime).ToList();
+                ViewBag.EndTime = endTime;
+
+            }
             return View(stop);
         }
 

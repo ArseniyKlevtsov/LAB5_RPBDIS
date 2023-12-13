@@ -29,8 +29,10 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Trains/Details/5
-        public async Task<IActionResult> Details(int? id)
+        public async Task<IActionResult> Details(int? id, string? sortOrder)
         {
+            ViewBag.ArivalSortParm = String.IsNullOrEmpty(sortOrder) ? "arival_desc" : "";
+            ViewBag.DepartureSortParm = sortOrder == "departure" ? "departure_desc" : "departure";
             if (id == null || _context.Trains == null)
             {
                 return NotFound();
@@ -38,13 +40,38 @@ namespace RailwayTrafficSolution.Controllers
 
             var train = await _context.Trains
                 .Include(t => t.TrainType)
+                .Include(t => t.Schedules)
+                    .ThenInclude(s => s.Stop)
                 .FirstOrDefaultAsync(m => m.TrainId == id);
             if (train == null)
             {
                 return NotFound();
             }
+            List<Schedule> sortedSchedules;
 
-            return View(train);
+            switch (sortOrder)
+            {
+                case "arival_desc":
+                    sortedSchedules = train.Schedules.OrderByDescending(s => s.ArrivalTime).ToList();
+                    break;
+                case "departure":
+                    sortedSchedules = train.Schedules.OrderBy(s => s.DepartureTime).ToList();
+                    break;
+                case "departure_desc":
+                    sortedSchedules = train.Schedules.OrderByDescending(s => s.DepartureTime).ToList();
+                    break;
+                default:
+                    sortedSchedules = train.Schedules.OrderBy(s => s.ArrivalTime).ToList();
+                    break;
+            }
+
+            var sortedTrain = new Train
+            {
+                TrainId = train.TrainId,
+                // Копирование других свойств поезда
+                Schedules = sortedSchedules
+            };
+            return View(sortedTrain);
         }
 
         // GET: Trains/Create
@@ -166,6 +193,22 @@ namespace RailwayTrafficSolution.Controllers
             
             await _context.SaveChangesAsync();
             return RedirectToAction(nameof(Index));
+        }
+
+        public IActionResult TrainStuff(int dayOfWeek, int trainId)
+        {
+            ViewBag.DayOfWeek = dayOfWeek;
+            var train = _context.Trains
+                .Include(t => t.TrainStaffs)
+                .ThenInclude(ts => ts.Employee)
+                .ThenInclude(e => e.Position)
+                .FirstOrDefault(t => t.TrainId == trainId);
+            if(train == null)
+            {
+                return NotFound();
+            }
+            
+            return View(train);
         }
 
         private bool TrainExists(int id)
