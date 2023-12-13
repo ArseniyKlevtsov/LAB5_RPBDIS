@@ -1,6 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 
-namespace LAB5_RPBDIS.ViewModels.User.Role
+namespace RailwayTrafficSolution.ViewModels.User.Role
 {
     public class ChangeRoleViewModel
     {

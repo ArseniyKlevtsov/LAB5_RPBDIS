@@ -1,12 +1,12 @@
-﻿using LAB5_RPBDIS.Data;
-using LAB5_RPBDIS.Models;
+﻿using RailwayTrafficSolution.Data;
+using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Http;
 using System;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace LAB5_RPBDIS.Middleware
+namespace RailwayTrafficSolution.Middleware
 {
     public class DbInitializerMiddleware
     {

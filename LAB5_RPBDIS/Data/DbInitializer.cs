@@ -1,8 +1,8 @@
 ﻿
-using LAB5_RPBDIS.Data;
-using LAB5_RPBDIS.Models;
+using RailwayTrafficSolution.Data;
+using RailwayTrafficSolution.Models;
 
-namespace LAB5_RPBDIS
+namespace RailwayTrafficSolution
 {
     public class DbInitializer
     {

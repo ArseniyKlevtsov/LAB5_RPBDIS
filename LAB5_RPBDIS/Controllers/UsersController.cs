@@ -1,11 +1,11 @@
-﻿using LAB5_RPBDIS.Models;
-using LAB5_RPBDIS.ViewModels.User;
+﻿using RailwayTrafficSolution.Models;
+using RailwayTrafficSolution.ViewModels.User;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LAB5_RPBDIS.Controllers
+namespace RailwayTrafficSolution.Controllers
 {
     public class UsersController : Controller
     {

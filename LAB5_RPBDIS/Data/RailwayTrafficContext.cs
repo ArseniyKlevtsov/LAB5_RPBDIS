@@ -1,8 +1,8 @@
-﻿using LAB5_RPBDIS.Models;
+﻿using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Identity.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore;
 
-namespace LAB5_RPBDIS.Data
+namespace RailwayTrafficSolution.Data
 {
     public class RailwayTrafficContext : IdentityDbContext
     {

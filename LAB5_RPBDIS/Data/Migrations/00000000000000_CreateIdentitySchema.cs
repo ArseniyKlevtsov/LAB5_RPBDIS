@@ -2,7 +2,7 @@
 using Microsoft.EntityFrameworkCore.Migrations;
 using System;
 
-namespace LAB5_RPBDIS.Data.Migrations
+namespace RailwayTrafficSolution.Data.Migrations
 {
     public partial class CreateIdentitySchema : Migration
     {

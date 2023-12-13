@@ -1,4 +1,4 @@
-namespace LAB5_RPBDIS.Models
+namespace RailwayTrafficSolution.Models
 {
     public class ErrorViewModel
     {

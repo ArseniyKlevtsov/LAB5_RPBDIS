@@ -5,13 +5,13 @@ using System.Threading.Tasks;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
-using LAB5_RPBDIS.Data;
-using LAB5_RPBDIS.Models;
+using RailwayTrafficSolution.Data;
+using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
 using Newtonsoft.Json;
 using Microsoft.AspNetCore.Http;
 
-namespace LAB5_RPBDIS.Controllers
+namespace RailwayTrafficSolution.Controllers
 {
     public class StopsController : Controller
     {

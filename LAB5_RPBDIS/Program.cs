@@ -1,10 +1,10 @@
-using LAB5_RPBDIS.Data;
-using LAB5_RPBDIS.Middleware;
+using RailwayTrafficSolution.Data;
+using RailwayTrafficSolution.Middleware;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using System.Globalization;
 
-namespace LAB5_RPBDIS
+namespace RailwayTrafficSolution
 {
     public class Program
     {

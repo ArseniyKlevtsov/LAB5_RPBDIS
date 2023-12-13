@@ -3,7 +3,7 @@ using Microsoft.EntityFrameworkCore.Migrations;
 
 #nullable disable
 
-namespace LAB5_RPBDIS.Data.Migrations
+namespace RailwayTrafficSolution.Data.Migrations
 {
     /// <inheritdoc />
     public partial class InitialCreate : Migration

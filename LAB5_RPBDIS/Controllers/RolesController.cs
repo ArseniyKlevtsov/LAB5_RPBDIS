@@ -1,9 +1,9 @@
-﻿using LAB5_RPBDIS.ViewModels.User.Role;
+﻿using RailwayTrafficSolution.ViewModels.User.Role;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 
-namespace LAB5_RPBDIS.Controllers
+namespace RailwayTrafficSolution.Controllers
 {
     public class RolesController : Controller
     {

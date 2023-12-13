@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel.DataAnnotations;
 using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 
-namespace LAB5_RPBDIS.Models
+namespace RailwayTrafficSolution.Models
 {
     public class Train
     {

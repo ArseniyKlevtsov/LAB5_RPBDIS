@@ -1,7 +1,7 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 
-namespace LAB5_RPBDIS.Models
+namespace RailwayTrafficSolution.Models
 {
     public class Employee
     {

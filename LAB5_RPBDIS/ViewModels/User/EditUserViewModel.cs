@@ -1,4 +1,4 @@
-﻿namespace LAB5_RPBDIS.ViewModels.User
+﻿namespace RailwayTrafficSolution.ViewModels.User
 {
     public class EditUserViewModel
     {

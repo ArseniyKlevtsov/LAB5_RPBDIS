@@ -1,8 +1,8 @@
-﻿using LAB5_RPBDIS.Models;
+﻿using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Mvc;
 using System.Diagnostics;
 
-namespace LAB5_RPBDIS.Controllers
+namespace RailwayTrafficSolution.Controllers
 {
     public class HomeController : Controller
     {
