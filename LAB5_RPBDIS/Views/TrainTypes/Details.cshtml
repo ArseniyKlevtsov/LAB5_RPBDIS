@@ -1,14 +1,11 @@
 ﻿@model RailwayTrafficSolution.Models.TrainType
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Детали";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>TrainType</h4>
-    <hr />
+    <h4>Тип поезда</h4>
     <dl class="row">
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.TypeName)
@@ -19,6 +16,6 @@
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.TrainTypeId">Редактировать</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.TrainTypeId" >Изменить</a> |
     <a asp-action="Index">Назад к списку</a>
 </div>

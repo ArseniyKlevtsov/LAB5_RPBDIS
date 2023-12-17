@@ -23,6 +23,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Schedules
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Index(int train = 0, int stop = 0, int page = 1,
             SortState sortOrder = SortState.DayOfWeekAsc)
         {
@@ -51,7 +52,7 @@ namespace RailwayTrafficSolution.Controllers
             }
 
             // пагинация
-            int pageSize = 10;
+            int pageSize = 9;
             var count = await trainStaffs.CountAsync();
             var items = await trainStaffs.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
@@ -67,6 +68,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Schedules/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Schedules == null)
@@ -96,8 +98,6 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // POST: Schedules/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MainAdmin,Admin")]

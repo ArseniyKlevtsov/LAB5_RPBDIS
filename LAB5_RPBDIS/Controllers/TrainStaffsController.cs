@@ -1,8 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
@@ -23,6 +19,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: TrainStaffs
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Index(int train = 0, int employee = 0, int page = 1,
             SortState sortOrder = SortState.DayOfWeekAsc)
         {
@@ -67,6 +64,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: TrainStaffs/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.TrainStaffs == null)

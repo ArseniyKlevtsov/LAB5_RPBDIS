@@ -1,4 +1,5 @@
-﻿using System.ComponentModel.DataAnnotations;
+﻿using RailwayTrafficSolution.Data;
+using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
 namespace RailwayTrafficSolution.Models
@@ -25,8 +26,10 @@ namespace RailwayTrafficSolution.Models
         public Stop? Stop { get; set; }
 
         [Display(Name = "Время прибытия")]
+        [RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", ErrorMessage = "Неверный формат времени. Используйте формат hh:mm:ss.")]
         public TimeSpan? ArrivalTime { get; set; }
         [Display(Name = "Время отправки")]
+        [RegularExpression(@"^(0[0-9]|1[0-9]|2[0-3]):[0-5][0-9]:[0-5][0-9]$", ErrorMessage = "Неверный формат времени. Используйте формат hh:mm:ss.")]
         public TimeSpan? DepartureTime { get; set; }
 
     }

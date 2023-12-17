@@ -23,6 +23,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Positions
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Index(string name, int page = 1,
             SortState sortOrder = SortState.NameAsc)
         {
@@ -36,11 +37,17 @@ namespace RailwayTrafficSolution.Controllers
             // сортировка
             switch (sortOrder)
             {
+                case SortState.NameDesc:
+                    positions = positions.OrderByDescending(s => s.PositionName);
+                    break;
+                case SortState.SalaryAsc:
+                    positions = positions.OrderBy(s => s.SalaryUsd);
+                    break;
                 case SortState.SalaryDesc:
                     positions = positions.OrderByDescending(s => s.SalaryUsd);
                     break;
                 default:
-                    positions = positions.OrderBy(s => s.SalaryUsd);
+                    positions = positions.OrderBy(s => s.PositionName);
                     break;
             }
 
@@ -61,6 +68,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Positions/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Positions == null)

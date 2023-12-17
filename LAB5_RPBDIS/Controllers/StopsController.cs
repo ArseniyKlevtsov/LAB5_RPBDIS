@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
-using Microsoft.AspNetCore.Mvc.Rendering;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
-using Newtonsoft.Json;
-using Microsoft.AspNetCore.Http;
+using RailwayTrafficSolution.ViewModels;
+using RailwayTrafficSolution.ViewModels.StopViewModels;
 
 namespace RailwayTrafficSolution.Controllers
 {
@@ -23,74 +18,59 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Stops
-        // GET: Stops
-        public async Task<IActionResult> Index(string? isRailwayStation, string? hasWaitingRoom)
+        [Authorize(Roles = "MainAdmin,Admin,User")]
+        public async Task<IActionResult> Index(string name, int isRailwayStation=0, int hasWaitingRoom=0, int page = 1,
+            SortState sortOrder = SortState.NameAsc)
         {
-            // если запрос без параметров 
-            // бёрём из куки сохраннёные значения, если их нет то стандартные
-            if(isRailwayStation ==null && hasWaitingRoom==null)
+
+            var stops = _context.Stops.AsQueryable();
+
+            //фильтрация
+            if (isRailwayStation != 0)
             {
-                hasWaitingRoom = Request.Cookies["hasWaitingRoom"] ?? "trueadnfalse";
-                isRailwayStation = Request.Cookies["isRailwayStation"] ?? "trueadnfalse";
+                // {0; "Все"},{1; "Да"},{2, "Нет"}
+                stops = stops.Where(p => p.IsRailwayStation == (isRailwayStation== 1?true:false));
+            }
+            if (hasWaitingRoom != 0)
+            {
+                // {0; "Все"},{1; "Да"},{2, "Нет"}
+                stops = stops.Where(p => p.HasWaitingRoom == (hasWaitingRoom== 1 ? true : false));
+            }
+            if (!string.IsNullOrEmpty(name))
+            {
+                stops = stops.Where(p => p.Name!.Contains(name));
             }
 
-            // переменные для сортировки в LINQ
-            bool isRailwayStationBool, hasWaitingRoomBool;
-
-            // возвращаемый списко остановок
-            List<Stop> stops;
-
-            // ложим во viewdata данные, для выбора нужной опции в селектах
-            ViewData["IsRailwayStation"] = isRailwayStation;
-            ViewData["HasWaitingRoom"] = hasWaitingRoom;
-
-            // сохранение в куки выбранные опции
-            Response.Cookies.Append("isRailwayStation", isRailwayStation);
-            Response.Cookies.Append("hasWaitingRoom", hasWaitingRoom);
-
-            // выбрано Да и Нет и там и там
-            if (isRailwayStation == "trueadnfalse" && hasWaitingRoom == "trueadnfalse")
+            // сортировка
+            switch (sortOrder)
             {
-                stops = await _context.Stops
-                .ToListAsync();
-                return View(stops);
+                case SortState.NameDesc:
+                    stops = stops.OrderByDescending(s => s.Name);
+                    break;
+                default:
+                    stops = stops.OrderBy(s => s.Name);
+                    break;
             }
 
-            // выбрано Да и Нет в первом месте
-            if (isRailwayStation == "trueadnfalse" && hasWaitingRoom != "trueadnfalse")
-            {
-                bool.TryParse(hasWaitingRoom, out hasWaitingRoomBool);
-                
-                stops = await _context.Stops
-                    .Where(s => s.HasWaitingRoom == hasWaitingRoomBool)
-                .ToListAsync();
+            // пагинация
+            int pageSize = 5;
+            var count = await stops.CountAsync();
+            var items = await stops.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
-                return View(stops);
-            }
+            // формируем модель представления
+            StopIndexViewModel viewModel = new StopIndexViewModel(
+                items,
+                new PageViewModel(count, page, pageSize),
+                new StopFilterViewModel(isRailwayStation, hasWaitingRoom, name),
+                new StopSortViewModel(sortOrder)
+            );
 
-            // выбрано Да и Нет в втором месте
-            if (isRailwayStation != "trueadnfalse" && hasWaitingRoom == "trueadnfalse")
-            {
-                bool.TryParse(isRailwayStation, out isRailwayStationBool);
-
-                stops = await _context.Stops
-                    .Where(s => s.IsRailwayStation == isRailwayStationBool)
-                .ToListAsync();
-
-                return View(stops);
-            }
-
-            
-            bool.TryParse(isRailwayStation, out isRailwayStationBool);
-            bool.TryParse(hasWaitingRoom, out hasWaitingRoomBool);
-
-            stops = await _context.Stops
-                .Where(s => (s.IsRailwayStation == isRailwayStationBool) && (s.HasWaitingRoom == hasWaitingRoomBool))
-                .ToListAsync();
-            return View(stops);
+            return View(viewModel);
         }
-        // GET: Stops/Details/5
 
+
+        // GET: Stops/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id, string? searchStartTimeString, string? searchEndTimeString)
         {
             if (id == null || _context.Stops == null)
@@ -131,8 +111,6 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // POST: Stops/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MainAdmin,Admin")]
@@ -165,8 +143,6 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // POST: Stops/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MainAdmin,Admin")]

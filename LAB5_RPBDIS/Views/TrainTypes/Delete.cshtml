@@ -4,8 +4,6 @@
     ViewData["Title"] = "Удаление";
 }
 
-<h1>Удаление: </h1>
-
 <h3>Вы уверены, что хотите удалить эту запись?</h3>
 <div>
     <h4>Тип поезда</h4>
@@ -21,7 +19,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="TrainTypeId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Назад к спискуt</a>
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">Назад к списку</a>
     </form>
 </div>

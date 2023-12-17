@@ -1,50 +1,54 @@
-﻿@model IEnumerable<RailwayTrafficSolution.Models.Stop>
-
+﻿@using RailwayTrafficSolution.ViewModels.StopViewModels;
+@model StopIndexViewModel
 @{
     ViewData["Title"] = "Остановки";
-    string isRailwayStationValue = ViewData["IsRailwayStation"] as string;
-    string hasWaitingRoomValue = ViewData["HasWaitingRoom"] as string;
 }
 
 <h1>Остановки</h1>
 
 <p>
-    <a asp-action="Create">Добавить новую запись</a>
+    <a asp-action="Create" class="btn btn-primary">Добавить новую запись</a>
 </p>
-<p>
-    Укажите данные для фильтрации
-</p>
-<form method="get" action="@Url.Action("Index")">
+<form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
     <div class="form-group">
-        <label for="isRailwayStation">ЖД станция:</label>
-        <select class="form-control" id="isRailwayStation" name="isRailwayStation">
-            <option value="trueadnfalse">Да и Нет</option>
-            <option value="true">Да</option>
-            <option value="false">Нет</option>
-        </select>
+        <h4>Фильтрация</h4>
     </div>
     <div class="form-group">
-        <label for="hasWaitingRoom">Зал ожидания:</label>
-        <select class="form-control" id="hasWaitingRoom" name="hasWaitingRoom">
-            <option value="trueadnfalse">Да и Нет</option>
-            <option value="true">Да</option>
-            <option value="false">Нет</option>
-        </select>
+        <label>Название: </label>
+        <input name="name" value="@Model.FilterViewModel.SelectedName" class="form-control" />
     </div>
-    <button type="submit" class="btn btn-primary">Отфильтровать</button>
+    <p></p>
+    <div class="form-group">
+        <label>Является ЖД станцией?: </label>
+        <select name="isRailwayStation" asp-items="Model.FilterViewModel.IsRailwayStationList" class="form-control"></select>
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label>Есть команата ожидания?: </label>
+        <select name="hasWaitingRoom" asp-items="Model.FilterViewModel.HasWaitingRoomList" class="form-control"></select>
+    </div>
+    <p></p>
+    <input type="submit" value="Применить" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-primary">Сбросить фильтр</a>
 </form>
 
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.Name)
+                <a asp-action="Index"
+                    asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+                    asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                    asp-route-isRailwayStation="@(Model.FilterViewModel.SelectedIsRailwayStation)"
+                    asp-route-hasWaitingRoom="@(Model.FilterViewModel.SelectedHasWaitingRoom)">
+                    Название
+                </a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.IsRailwayStation)
+                Является ЖД станцией?
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.HasWaitingRoom)
+                Есть команата ожидания?
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {
@@ -53,7 +57,7 @@
         </tr>
     </thead>
     <tbody>
-        @foreach (var item in Model)
+        @foreach (var item in Model.Stops)
         {
             <tr>
                 <td>
@@ -82,8 +86,8 @@
                 @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
                 {
                     <td>
-                        <a asp-action="Edit" asp-route-id="@item.StopId">Редактировать</a> |
-                        <a asp-action="Details" asp-route-id="@item.StopId">Подробно</a> |
+                        <a asp-action="Edit" asp-route-id="@item.StopId">Изменить</a> |
+                        <a asp-action="Details" asp-route-id="@item.StopId">Детали</a> |
                         <a asp-action="Delete" asp-route-id="@item.StopId">Удалить</a>
                     </td>
                 }
@@ -92,24 +96,54 @@
     </tbody>
 </table>
 
-<script>
-    // Получение элементов селектов
-    var isRailwayStationSelect = document.getElementById("isRailwayStation");
-    var hasWaitingRoomSelect = document.getElementById("hasWaitingRoom");
-
-    // Установка выбранного значения для селекта "ЖД станция"
-    for (var i = 0; i < isRailwayStationSelect.options.length; i++) {
-        if (isRailwayStationSelect.options[i].value === "@isRailwayStationValue") {
-            isRailwayStationSelect.options[i].selected = true;
-            break;
-        }
+<div>
+    <a asp-action="Index"
+       asp-route-page="@(1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+       asp-route-isRailwayStation="@(Model.FilterViewModel.SelectedIsRailwayStation)"
+       asp-route-hasWaitingRoom="@(Model.FilterViewModel.SelectedHasWaitingRoom)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-primary">
+        1
+    </a>
+    <button type="button" class="btn btn-lg btn-primary" disabled>@Model.PageViewModel.PageNumber</button>
+    @if (Model.PageViewModel.TotalPages != 0)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.TotalPages)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-isRailwayStation="@(Model.FilterViewModel.SelectedIsRailwayStation)"
+           asp-route-hasWaitingRoom="@(Model.FilterViewModel.SelectedHasWaitingRoom)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            @Model.PageViewModel.TotalPages
+        </a>
     }
-
-    // Установка выбранного значения для селекта "Зал ожидания"
-    for (var j = 0; j < hasWaitingRoomSelect.options.length; j++) {
-        if (hasWaitingRoomSelect.options[j].value === "@hasWaitingRoomValue") {
-            hasWaitingRoomSelect.options[j].selected = true;
-            break;
-        }
+</div>
+<p></p>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-isRailwayStation="@(Model.FilterViewModel.SelectedIsRailwayStation)"
+           asp-route-hasWaitingRoom="@(Model.FilterViewModel.SelectedHasWaitingRoom)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &lt;
+        </a>
     }
-</script>
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-isRailwayStation="@(Model.FilterViewModel.SelectedIsRailwayStation)"
+           asp-route-hasWaitingRoom="@(Model.FilterViewModel.SelectedHasWaitingRoom)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &gt;
+        </a>
+    }
+</div>

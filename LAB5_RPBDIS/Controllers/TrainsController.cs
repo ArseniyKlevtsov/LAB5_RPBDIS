@@ -24,6 +24,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Trains
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Index(string name, int trainType = 0, float distanceInKm = 0, int page = 1,
             SortState sortOrder = SortState.NameAsc)
         {
@@ -57,10 +58,10 @@ namespace RailwayTrafficSolution.Controllers
                     trains = trains.OrderByDescending(s => s.DistanceInKm);
                     break;
                 case SortState.TrainTypeAsc:
-                    trains = trains.OrderBy(s => s.TrainType);
+                    trains = trains.OrderBy(s => s.TrainType!.TypeName);
                     break;
                 case SortState.TrainTypeDesc:
-                    trains = trains.OrderByDescending(s => s.TrainType);
+                    trains = trains.OrderByDescending(s => s.TrainType!.TypeName);
                     break;
                 default:
                     trains = trains.OrderBy(s => s.TrainNumber);
@@ -68,7 +69,7 @@ namespace RailwayTrafficSolution.Controllers
             }
 
             // пагинация
-            int pageSize = 10;
+            int pageSize = 6;
             var count = await trains.CountAsync();
             var items = await trains.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
@@ -83,26 +84,8 @@ namespace RailwayTrafficSolution.Controllers
             return View(viewModel);
         }
 
-        // GET: Employees/Details/5
-        public async Task<IActionResult> Details(int? id)
-        {
-            if (id == null || _context.Employees == null)
-            {
-                return NotFound();
-            }
-
-            var employee = await _context.Employees
-                .Include(e => e.Position)
-                .FirstOrDefaultAsync(m => m.EmployeeId == id);
-            if (employee == null)
-            {
-                return NotFound();
-            }
-
-            return View(employee);
-        }
-
         // GET: Trains/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id, string? sortOrder)
         {
             ViewBag.ArivalSortParm = String.IsNullOrEmpty(sortOrder) ? "arival_desc" : "";
@@ -142,7 +125,11 @@ namespace RailwayTrafficSolution.Controllers
             var sortedTrain = new Train
             {
                 TrainId = train.TrainId,
-                // Копирование других свойств поезда
+                TrainType = train.TrainType,
+                DistanceInKm = train.DistanceInKm,
+                TrainStaffs = train.TrainStaffs,
+                TrainNumber = train.TrainNumber,
+
                 Schedules = sortedSchedules
             };
             return View(sortedTrain);

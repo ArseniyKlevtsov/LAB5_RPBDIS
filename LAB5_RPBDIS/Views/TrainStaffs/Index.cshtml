@@ -63,7 +63,7 @@
                 @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
                 {
                 <td>
-                        <a asp-action="Edit" asp-route-id="@item.TrainStaffId">Редактировать</a> |
+                        <a asp-action="Edit" asp-route-id="@item.TrainStaffId">Изменить</a> |
                         <a asp-action="Details" asp-route-id="@item.TrainStaffId">Подробно</a> |
                         <a asp-action="Delete" asp-route-id="@item.TrainStaffId">Удалить</a>
                 </td>

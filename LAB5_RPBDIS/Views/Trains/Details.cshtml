@@ -1,7 +1,7 @@
 ﻿@model RailwayTrafficSolution.Models.Train
 
 @{
-    ViewData["Title"] = "Подробно";
+    ViewData["Title"] = "Детали";
 }
 
 <div>
@@ -37,13 +37,13 @@
             @Html.DisplayNameFor(model => model.TrainType)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.TrainType.TypeName)
+            @Html.DisplayFor(model => model!.TrainType!.TypeName)
             
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.TrainId">Редактировать</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.TrainId">Изменить</a> |
     <a asp-action="Index">Назад к списку</a>
 </div>
 <hr />
@@ -55,7 +55,7 @@
         <input type="number" id="dayOfWeek" class="form-control" name="dayOfWeek" min="1" max="7">
     </div>
     <div class="form-group">
-        <input type="hidden" id="trainId" name="trainId" value="@Model.TrainId">
+        <input type="hidden" id="trainId" name="trainId" value="@Model!.TrainId">
     </div>
     <button type="submit" class="btn btn-primary">Перейти</button>
 }
@@ -88,7 +88,7 @@
                     @Html.DisplayFor(modelItem => item.DayOfWeek)
                 </td>
                 <td>
-                    @Html.ActionLink(item.Stop.Name, "Details", "Stops", new { id = item.Stop.StopId }, null)
+                    @Html.ActionLink(item!.Stop!.Name, "Details", "Stops", new { id = item.Stop.StopId }, null)
                 </td>
                 <td>
                     @Html.DisplayFor(modelItem => item.ArrivalTime)

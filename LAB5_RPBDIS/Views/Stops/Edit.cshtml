@@ -1,12 +1,10 @@
 ﻿@model RailwayTrafficSolution.Models.Stop
 
 @{
-    ViewData["Title"] = "Редактирование";
+    ViewData["Title"] = "Изменение";
 }
 
-<h1>Редактирование: остановка</h1>
-
-<h4>Stop</h4>
+<h4>Остановка</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -19,17 +17,23 @@
                 <span asp-validation-for="Name" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsRailwayStation" class="control-label"></label>
-                <input asp-for="IsRailwayStation" class="form-control" />
+                <label asp-for="IsRailwayStation" class="control-label">Является ЖД станцией?:</label>
+                <select asp-for="IsRailwayStation" class="form-control">
+                    <option value="true">Да</option>
+                    <option value="false">Нет</option>
+                </select>
                 <span asp-validation-for="IsRailwayStation" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="HasWaitingRoom" class="control-label"></label>
-                <input asp-for="HasWaitingRoom" class="form-control" />
+                <label asp-for="HasWaitingRoom" class="control-label">Есть команата ожидания?:</label>
+                <select asp-for="HasWaitingRoom" class="form-control">
+                    <option value="true">Да</option>
+                    <option value="false">Нет</option>
+                </select>
                 <span asp-validation-for="HasWaitingRoom" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>

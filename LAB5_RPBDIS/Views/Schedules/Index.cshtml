@@ -8,7 +8,7 @@
 <h1>Расписание</h1>
 
 <p>
-    <a asp-action="Create">Добавить новую запись</a>
+    <a asp-action="Create" class="btn btn-primary">Добавить новую запись</a>
 </p>
 <form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
     <div class="form-group">
@@ -34,7 +34,8 @@
                 <a asp-action="Index"
                    asp-route-sortOrder="@(Model.SortViewModel.DayOfWeekSort)"
                    asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
-                   asp-route-stop="@(Model.FilterViewModel.SelectedStop)">Имя сотрудника</a>
+                   asp-route-stop="@(Model.FilterViewModel.SelectedStop)">День недели
+               </a>
             </th>
             <th>
                 Поезд
@@ -76,8 +77,8 @@
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {
                 <td>
-                <a asp-action="Edit" asp-route-id="@item.ScheduleId">Редактировать</a> |
-                <a asp-action="Details" asp-route-id="@item.ScheduleId">Подробно</a> |
+                <a asp-action="Edit" asp-route-id="@item.ScheduleId">Изменить</a> |
+                <a asp-action="Details" asp-route-id="@item.ScheduleId">Детали</a> |
                 <a asp-action="Delete" asp-route-id="@item.ScheduleId">Удалить</a>
                         
                 </td>

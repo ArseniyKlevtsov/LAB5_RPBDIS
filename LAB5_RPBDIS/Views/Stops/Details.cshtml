@@ -1,7 +1,7 @@
 ﻿@model RailwayTrafficSolution.Models.Stop
 
 @{
-    ViewData["Title"] = "Подробно";
+    ViewData["Title"] = "Детали";
 
 }
 
@@ -21,7 +21,7 @@
                 @Html.DisplayNameFor(model => model.IsRailwayStation)
             </dt>
             <dd class="col-sm-10">
-                @if (Model.IsRailwayStation == true)
+                @if (Model!.IsRailwayStation == true)
                 {
                     <p>Да</p>
                 }
@@ -34,7 +34,7 @@
                 @Html.DisplayNameFor(model => model.HasWaitingRoom)
             </dt>
             <dd class="col-sm-10">
-                @if (Model.HasWaitingRoom == true)
+                @if (Model!.HasWaitingRoom == true)
                 {
                     <p>Да</p>
                 }
@@ -47,17 +47,16 @@
     </div>
 
     <div>
-        <a asp-action="Edit" asp-route-id="@Model?.StopId">Редактировать</a> |
+        <a asp-action="Edit" asp-route-id="@Model?.StopId">Изменить</a> |
         <a asp-action="Index">Назад к списку</a>
     </div>
 
 
     <h4>Проходимые через остановку поезда</h4>
-    <hr />
-    <p>Всего остановок: @Model.Schedules.Count</p>
+    <p>Всего поездов: @Model!.Schedules.Count</p>
     <hr />
     <p>Фильтрация по времени(в ч.) прибытия</p>
-    <div >
+    <form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
         <div class="form-group">
             <label for="searchStartTimeString">От</label>
             <input type="number" id="searchStartTimeString" class="form-control" name="searchStartTimeString" value="@ViewBag.StartTime">
@@ -68,7 +67,7 @@
             <input type="number" id="searchEndTimeString" class="form-control" name="searchEndTimeString" value="@ViewBag.EndTime">
         </div>
     <button type="submit" class="btn btn-primary">Применить</button>
-    </div>
+    </form>
 
     <table class="table">
         <thead>
@@ -95,7 +94,7 @@
                         @Html.DisplayFor(modelItem => item.DayOfWeek)
                     </td>
                     <td>
-                        @Html.ActionLink(item.Train.TrainNumber, "Details", "Trains", new { id = item.Train.TrainId }, null)
+                        @Html.ActionLink(item!.Train!.TrainNumber, "Details", "Trains", new { id = item.Train.TrainId }, null)
                     </td>
                     <td>
                         @Html.DisplayFor(modelItem => item.ArrivalTime)

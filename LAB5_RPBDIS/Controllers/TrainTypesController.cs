@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
+using RailwayTrafficSolution.ViewModels.TrainTypeViewModels;
+using RailwayTrafficSolution.ViewModels;
 
 namespace RailwayTrafficSolution.Controllers
 {
@@ -21,18 +23,48 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: TrainTypes
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+        [Authorize(Roles = "MainAdmin,Admin,User")]
+        public async Task<IActionResult> Index(string name, int page = 1,
+            SortState sortOrder = SortState.NameAsc)
         {
-            var totalItems = await _context.TrainTypes.CountAsync();
-            var trainTypes = await _context.TrainTypes.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            ViewData["Page"] = page; // Сохраняем значение page в ViewData
-            ViewData["PageSize"] = pageSize; // Сохраняем значение pageSize в ViewData
-            ViewData["TotalItems"] = totalItems; // Сохраняем общее число элементов в ViewData
 
-            return View(trainTypes);
+            var trainTypes = _context.TrainTypes.AsQueryable();
+
+            //фильтрация
+            if (!string.IsNullOrEmpty(name))
+            {
+                trainTypes = trainTypes.Where(p => p.TypeName!.Contains(name));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SortState.NameDesc:
+                    trainTypes = trainTypes.OrderByDescending(s => s.TypeName);
+                    break;
+                default:
+                    trainTypes = trainTypes.OrderBy(s => s.TypeName);
+                    break;
+            }
+
+            // пагинация
+            int pageSize = 10;
+            var count = await trainTypes.CountAsync();
+            var items = await trainTypes.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            TrainTypeIndexViewModel viewModel = new TrainTypeIndexViewModel(
+                items,
+                new PageViewModel(count, page, pageSize),
+                new TrainTypeFilterViewModel(name),
+                new TrainTypeSortViewModel(sortOrder)
+            );
+
+            return View(viewModel);
         }
 
         // GET: TrainTypes/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.TrainTypes == null)
@@ -58,8 +90,6 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // POST: TrainTypes/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MainAdmin,Admin")]
@@ -92,8 +122,6 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // POST: TrainTypes/Edit/5
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MainAdmin,Admin")]

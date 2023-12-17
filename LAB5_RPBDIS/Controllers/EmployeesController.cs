@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
-using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
 using RailwayTrafficSolution.ViewModels;
 using RailwayTrafficSolution.ViewModels.EmployeeViewModels;
 
@@ -82,6 +77,7 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Employees/Details/5
+        [Authorize(Roles = "MainAdmin,Admin,User")]
         public async Task<IActionResult> Details(int? id)
         {
             if (id == null || _context.Employees == null)
@@ -109,8 +105,6 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // POST: Employees/Create
-        // To protect from overposting attacks, enable the specific properties you want to bind to.
-        // For more details, see http://go.microsoft.com/fwlink/?LinkId=317598.
         [HttpPost]
         [ValidateAntiForgeryToken]
         [Authorize(Roles = "MainAdmin,Admin")]

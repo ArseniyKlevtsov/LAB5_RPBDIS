@@ -17,7 +17,9 @@ namespace RailwayTrafficSolution.Models
         [Display(Name = "Опыт работы")]
         public float? WorkExperience { get; set; }
 
+        [Display(Name = "Должность")]
         public int PositionID { get; set; }
+        [Display(Name = "Должность")]
         public Position? Position { get; set; }
 
         public List<Train> Trains { get; set; } = new();

@@ -28,7 +28,7 @@
         {
             <tr>
                 <td>
-                    @item.Employee.EmployeeName
+                    @item!.Employee!.EmployeeName
                 </td>
                 <td>
                     @item.Employee.age
@@ -37,7 +37,7 @@
                     @item.Employee.WorkExperience
                 </td>
                 <td>
-                    @item.Employee.Position.PositionName;
+                    @item.Employee!.Position!.PositionName
                 </td>
             </tr>
         }

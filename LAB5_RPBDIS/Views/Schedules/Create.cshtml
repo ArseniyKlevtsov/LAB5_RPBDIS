@@ -1,12 +1,10 @@
 ﻿@model RailwayTrafficSolution.Models.Schedule
 
 @{
-    ViewData["Title"] = "Создание";
+    ViewData["Title"] = "Создание записи";
 }
 
-<h1>Создание: запись расписания</h1>
-
-<h4>Запись расписания</h4>
+<h4>Расписание</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -36,7 +34,7 @@
                 <span asp-validation-for="DepartureTime" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Создать" class="btn btn-primary" />
             </div>
         </form>
     </div>
@@ -45,3 +43,8 @@
 <div>
     <a asp-action="Index">Назад к списку</a>
 </div>
+@section Scripts {
+    @{
+        await Html.RenderPartialAsync("_ValidationScriptsPartial");
+    }
+}

@@ -3,10 +3,8 @@
     await Html.RenderPartialAsync("_ValidationScriptsPartial");
 }
 @{
-    ViewData["Title"] = "Редактирование";
+    ViewData["Title"] = "Изменение";
 }
-
-<h1>Редактирование: поезд</h1>
 
 <h4>Train</h4>
 <hr />
@@ -22,12 +20,15 @@
             </div>
             <div class="form-group">
                 <label asp-for="DistanceInKm" class="control-label"></label>
-                <input asp-for="DistanceInKm" class="form-control" data-val="true" data-val-float="Please enter a valid float number." />
+                <input asp-for="DistanceInKm" class="form-control" data-val="true" data-val-float="Пожалуйста введте вещественое чилсло: 1 или 1.5" />
                 <span asp-validation-for="DistanceInKm" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <label asp-for="IsBrandedTrain" class="control-label"></label>
-                <input asp-for="IsBrandedTrain" class="form-control" />
+                <label asp-for="IsBrandedTrain" class="control-label">Является брэндированным?:</label>
+                <select asp-for="IsBrandedTrain" class="form-control">
+                    <option value="true">Да</option>
+                    <option value="false">Нет</option>
+                </select>
                 <span asp-validation-for="IsBrandedTrain" class="text-danger"></span>
             </div>
             <div class="form-group">
@@ -36,7 +37,7 @@
                 <span asp-validation-for="TrainTypeId" class="text-danger"></span>
             </div>
             <div class="form-group">
-                <input type="submit" value="Save" class="btn btn-primary" />
+                <input type="submit" value="Сохранить" class="btn btn-primary" />
             </div>
         </form>
     </div>

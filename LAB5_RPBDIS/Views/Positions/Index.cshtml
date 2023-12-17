@@ -4,17 +4,17 @@
     ViewData["Title"] = "Должности";
 }
 
-<h1>Должность</h1>
+<h1>Должности</h1>
 
 <p>
-    <a asp-action="Create">Добавить новую запись</a>
+    <a asp-action="Create" class="btn btn-primary">Добавить новую запись</a>
 </p>
 <form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
     <div class="form-group">
         <h4>Фильтрация</h4>
     </div>
     <div class="form-group">
-        <label>Имя сотрудника: </label>
+        <label>Название: </label>
         <input name="name" value="@Model.FilterViewModel.SelectedName" class="form-control" />
     </div>
     <p></p>
@@ -25,7 +25,11 @@
     <thead>
         <tr>
             <th>
-                Должность
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+                   asp-route-name="@(Model.FilterViewModel.SelectedName)">
+                    Название
+                </a>
             </th>
 
             <th>
@@ -55,7 +59,7 @@
             {
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.PositionId">Изменить</a> |
-                    <a asp-action="Details" asp-route-id="@item.PositionId">Подробно</a> |
+                    <a asp-action="Details" asp-route-id="@item.PositionId">Детали</a> |
                     <a asp-action="Delete" asp-route-id="@item.PositionId">Удалить</a>
                 </td>
             }

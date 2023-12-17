@@ -1,23 +1,35 @@
-﻿@model IEnumerable<RailwayTrafficSolution.Models.TrainType>
-
+﻿@using RailwayTrafficSolution.ViewModels.TrainTypeViewModels;
+@model TrainTypeIndexViewModel
 @{
     ViewData["Title"] = "Типы поездов";
-
-    var page = (int)ViewData["Page"]; 
-    var pageSize = (int)ViewData["PageSize"]; 
-    var totalItems = Model.Count();
-    var totalPages = (int)Math.Ceiling(totalItems / (double)pageSize);
 }
 <h1>Типы поездов</h1>
 
 <p>
-    <a asp-action="Create">Добавить новую запись</a>
+    <a asp-action="Create" class="btn btn-primary">Добавить новую запись</a>
 </p>
+<form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
+    <div class="form-group">
+        <h4>Фильтрация</h4>
+    </div>
+    <div class="form-group">
+        <label>Тип поезда: </label>
+        <input name="name" value="@Model.FilterViewModel.SelectedName" class="form-control" />
+    </div>
+    <p></p>
+    <input type="submit" value="Применить" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-primary">Сбросить фильтр</a>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Тип поезда
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+                   asp-route-name="@(Model.FilterViewModel.SelectedName)">
+                   Тип поезда
+               </a>
+                
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {
@@ -26,7 +38,7 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.TrainTypes) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.TypeName)
@@ -34,8 +46,8 @@
                 @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
                 {
                 <td>
-                        <a asp-action="Edit" asp-route-id="@item.TrainTypeId">Редактировать</a> |
-                        <a asp-action="Details" asp-route-id="@item.TrainTypeId">Подробно</a> |
+                        <a asp-action="Edit" asp-route-id="@item.TrainTypeId">Изменить</a> |
+                        <a asp-action="Details" asp-route-id="@item.TrainTypeId">Детали</a> |
                         <a asp-action="Delete" asp-route-id="@item.TrainTypeId">Удалить</a>
                 </td>
                 }
@@ -43,20 +55,47 @@
 }
     </tbody>
 </table>
-<span class="btn btn-primary">
-    @for (int i = page - 1; i <= totalPages; i++)
+<div>
+    <a asp-action="Index"
+       asp-route-page="@(1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-primary">
+        1
+    </a>
+    <button type="button" class="btn btn-lg btn-primary" disabled>@Model.PageViewModel.PageNumber</button>
+    @if (Model.PageViewModel.TotalPages != 0)
     {
-        if(i<1)
-        {
-            continue;
-        }
-        if(i>page+1)
-        {
-            break;
-        }
-        if (i >= 1 && i <= totalPages)
-        {
-            <a href="@Url.Action("Index", new { page = i, pageSize })" class="btn btn-primary @(page == i ? "active" : "")">@i</a>
-        }
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.TotalPages)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            @Model.PageViewModel.TotalPages
+        </a>
     }
-</span>
+</div>
+<p></p>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &lt;
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &gt;
+        </a>
+    }
+</div>
+

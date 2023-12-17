@@ -6,7 +6,7 @@ namespace RailwayTrafficSolution.Models
     {
         public int StopId { get; set; }
 
-        [Display(Name = "Остановка")]
+        [Display(Name = "Название")]
         public string? Name { get; set; }
 
         [Display(Name = "Является ЖД станцией?")]

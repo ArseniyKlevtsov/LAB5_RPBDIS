@@ -6,7 +6,7 @@ namespace RailwayTrafficSolution.Models
     {
         public int PositionId { get; set; }
 
-        [Display(Name = "Должность")]
+        [Display(Name = "Название")]
         public string? PositionName { get; set; }
 
         [Display(Name = "Зарплата ($)")]

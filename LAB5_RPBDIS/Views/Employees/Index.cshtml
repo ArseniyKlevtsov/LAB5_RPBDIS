@@ -7,7 +7,7 @@
 <h1>Работники</h1>
 
 <p>
-    <a asp-action="Create">Добавить новую запись</a>
+    <a asp-action="Create" class="btn btn-primary">Добавить новую запись</a>
 </p>
 <form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
     <div class="form-group">
@@ -33,7 +33,9 @@
                 <a asp-action="Index"
                    asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
                    asp-route-name="@(Model.FilterViewModel.SelectedName)"
-                   asp-route-position="@(Model.FilterViewModel.SelectedPosition)">Имя сотрудника</a>
+                   asp-route-position="@(Model.FilterViewModel.SelectedPosition)">
+                   Имя сотрудника
+               </a>
             </th>
             <th>
                 <a asp-action="Index"
@@ -75,7 +77,7 @@
             {
                 <td>
                     <a asp-action="Edit" asp-route-id="@item.EmployeeId">Изменить</a> |
-                    <a asp-action="Details" asp-route-id="@item.EmployeeId">Подробно</a> |
+                    <a asp-action="Details" asp-route-id="@item.EmployeeId">Детали</a> |
                     <a asp-action="Delete" asp-route-id="@item.EmployeeId">Удалить</a>
                 </td>
             }

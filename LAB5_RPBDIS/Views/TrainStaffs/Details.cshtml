@@ -1,13 +1,11 @@
 ﻿@model RailwayTrafficSolution.Models.TrainStaff
 
 @{
-    ViewData["Title"] = "Details";
+    ViewData["Title"] = "Детали";
 }
 
-<h1>Details</h1>
-
 <div>
-    <h4>TrainStaff</h4>
+    <h4>Работник поезда</h4>
     <hr />
     <dl class="row">
         <dt class = "col-sm-2">
@@ -20,17 +18,17 @@
             @Html.DisplayNameFor(model => model.Train)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Train.TrainNumber)
+            @Html.DisplayFor(model => model!.Train!.TrainNumber)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Employee)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Employee.EmployeeName)
+            @Html.DisplayFor(model => model!.Employee!.EmployeeName)
         </dd>
     </dl>
 </div>
 <div>
-    <a asp-action="Edit" asp-route-id="@Model?.TrainStaffId">Редактировать</a> |
+    <a asp-action="Edit" asp-route-id="@Model?.TrainStaffId">Изменить</a> |
     <a asp-action="Index">Назад к списку</a>
 </div>

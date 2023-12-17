@@ -10,7 +10,7 @@ namespace RailwayTrafficSolution.Models
         [Display(Name = "Номер поезда")]
         public string? TrainNumber { get; set;}
 
-        [Display(Name = "Дистанция всего пути")]
+        [Display(Name = "Дистанция всего пути (в км.)")]
         public float? DistanceInKm { get; set; }
 
         [Display(Name = "Является брэндированным?")]

@@ -4,8 +4,6 @@
     ViewData["Title"] = "Удаление";
 }
 
-<h1>Удалени: запись расписания</h1>
-
 <h3>Вы уверены что хотите удалить эту запись?</h3>
 <div>
     <h4>Запись расписания</h4>
@@ -21,13 +19,13 @@
             @Html.DisplayNameFor(model => model.Train)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Train.TrainNumber)
+            @Html.DisplayFor(model => model!.Train!.TrainNumber)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.Stop)
         </dt>
         <dd class = "col-sm-10">
-            @Html.DisplayFor(model => model.Stop.Name)
+            @Html.DisplayFor(model => model!.Stop!.Name)
         </dd>
         <dt class = "col-sm-2">
             @Html.DisplayNameFor(model => model.ArrivalTime)
@@ -45,7 +43,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="ScheduleId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Назадлt</a>
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">Назад</a>
     </form>
 </div>

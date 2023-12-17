@@ -4,8 +4,6 @@
     ViewData["Title"] = "Удаление";
 }
 
-<h1>Удаление: работник</h1>
-
 <h3>Вы точно хотите удалить работника из базы??</h3>
 <div>
     <h4>Работник</h4>
@@ -39,7 +37,7 @@
     
     <form asp-action="Delete">
         <input type="hidden" asp-for="EmployeeId" />
-        <input type="submit" value="Delete" class="btn btn-danger" /> |
-        <a asp-action="Index">Back to List</a>
+        <input type="submit" value="Удалить" class="btn btn-danger" /> |
+        <a asp-action="Index">Назад к списку</a>
     </form>
 </div>

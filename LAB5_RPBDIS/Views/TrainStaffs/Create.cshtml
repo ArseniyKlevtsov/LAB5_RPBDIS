@@ -1,12 +1,10 @@
 ﻿@model RailwayTrafficSolution.Models.TrainStaff
 
 @{
-    ViewData["Title"] = "Добавление";
+    ViewData["Title"] = "Создание записи";
 }
 
-<h1>Добавление: работники поезда</h1>
-
-<h4>Работники поезда</h4>
+<h4>Работник поезда</h4>
 <hr />
 <div class="row">
     <div class="col-md-4">
@@ -26,7 +24,7 @@
                 <select asp-for="EmployeeId" class ="form-control" asp-items="ViewBag.EmployeeId"></select>
             </div>
             <div class="form-group">
-                <input type="submit" value="Create" class="btn btn-primary" />
+                <input type="submit" value="Создать" class="btn btn-primary" />
             </div>
         </form>
     </div>
