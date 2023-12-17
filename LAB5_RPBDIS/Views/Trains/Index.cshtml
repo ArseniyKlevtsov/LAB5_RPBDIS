@@ -1,7 +1,7 @@
-﻿@model IEnumerable<RailwayTrafficSolution.Models.Train>
-
+﻿@using RailwayTrafficSolution.ViewModels.TrainViewModels;
+@model TrainIndexViewModel
 @{
-    ViewData["Title"] = "Index";
+    ViewData["Title"] = "Поезда";
 }
 
 <h1>Поезда</h1>
@@ -9,20 +9,52 @@
 <p>
     <a asp-action="Create">Добавить новую запись</a>
 </p>
+<form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
+    <div class="form-group">
+        <h4>Фильтрация</h4>
+    </div>
+    <div class="form-group">
+        <label>Номер поезда: </label>
+        <input name="name" value="@Model.FilterViewModel.SelectedName" class="form-control" />
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label>Тип поезда: </label>
+        <select name="trainType" asp-items="Model.FilterViewModel.TrainTypes" class="form-control"></select>
+    </div>
+    <p></p>
+    <input type="submit" value="Применить" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-primary">Сбросить фильтр</a>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                Номер поезда
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+                   asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                   asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
+                    Номер поезда
+                </a>
             </th>
             <th>
-                Дистанция пути
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+                   asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                   asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
+                     Дистанция пути
+                </a>
             </th>
             <th>
                 Брэндированный
             </th>
             <th>
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.NameSort)"
+                   asp-route-name="@(Model.FilterViewModel.SelectedName)"
+                   asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
                 Тип поезда
+                </a>
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {
@@ -31,13 +63,13 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Trains) {
         <tr>
             <td>
-                @Html.DisplayFor(modelItem => item.TrainNumber)
+                    @Html.DisplayFor(modelItem => item.TrainNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.DistanceInKm)
+                    @Html.DisplayFor(modelItem => item.DistanceInKm)
             </td>
             <td>
                     @if (item.IsBrandedTrain == true)
@@ -50,7 +82,7 @@
                     }
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.TrainType.TypeName)
+                    @Html.DisplayFor(modelItem => item.TrainType.TypeName)
             </td>
                 @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
                 {
@@ -64,3 +96,54 @@
 }
     </tbody>
 </table>
+<div>
+    <a asp-action="Index"
+       asp-route-page="@(1)"
+       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+       asp-route-name="@(Model.FilterViewModel.SelectedName)"
+       asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-primary">
+        1
+    </a>
+    <button type="button" class="btn btn-lg btn-primary" disabled>@Model.PageViewModel.PageNumber</button>
+    @if (Model.PageViewModel.TotalPages != 0)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.TotalPages)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            @Model.PageViewModel.TotalPages
+        </a>
+    }
+</div>
+<p></p>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &lt;
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-name="@(Model.FilterViewModel.SelectedName)"
+           asp-route-position="@(Model.FilterViewModel.SelectedTrainType)">
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &gt;
+        </a>
+    }
+</div>

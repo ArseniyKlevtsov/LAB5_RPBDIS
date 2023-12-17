@@ -8,6 +8,9 @@ using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
+using static Microsoft.EntityFrameworkCore.DbLoggerCategory.Database;
+using RailwayTrafficSolution.ViewModels;
+using RailwayTrafficSolution.ViewModels.EmployeeViewModels;
 
 namespace RailwayTrafficSolution.Controllers
 {
@@ -22,10 +25,60 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Employees
-        public async Task<IActionResult> Index()
+        [Authorize(Roles = "MainAdmin,Admin,User")]
+        public async Task<IActionResult> Index(string name, int position = 0, int page = 1, 
+            SortState sortOrder = SortState.NameAsc)
         {
-            var railwayTrafficContext = _context.Employees.Include(e => e.Position);
-            return View(await railwayTrafficContext.ToListAsync());
+            
+            var employees = _context.Employees.Include(e => e.Position).AsQueryable();
+
+            //фильтрация
+            if (position != 0)
+            {
+                employees = employees.Where(p => p.PositionID == position);
+            }
+            if (!string.IsNullOrEmpty(name))
+            {
+                employees = employees.Where(p => p.EmployeeName!.Contains(name));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SortState.NameDesc:
+                    employees = employees.OrderByDescending(s => s.EmployeeName);
+                    break;
+                case SortState.AgeAsc:
+                    employees = employees.OrderBy(s => s.age);
+                    break;
+                case SortState.AgeDesc:
+                    employees = employees.OrderByDescending(s => s.age);
+                    break;
+                case SortState.WorkExperienceAsc:
+                    employees = employees.OrderBy(s => s.WorkExperience);
+                    break;
+                case SortState.WorkExperienceDesc:
+                    employees = employees.OrderByDescending(s => s.WorkExperience);
+                    break;
+                default:
+                    employees = employees.OrderBy(s => s.EmployeeName);
+                    break;
+            }
+
+            // пагинация
+            int pageSize =10;
+            var count = await employees.CountAsync();
+            var items = await employees.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            EmployeeIndexViewModel viewModel = new EmployeeIndexViewModel(
+                items,
+                new PageViewModel(count, page, pageSize),
+                new EmployeeFilterViewModel(_context.Positions.ToList(), position, name),
+                new EmployeeSortViewModel(sortOrder)
+            );
+
+            return View(viewModel);
         }
 
         // GET: Employees/Details/5

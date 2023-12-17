@@ -1,0 +1,66 @@
+﻿@{
+
+    var page = (int)ViewData["Page"];
+    var pageSize = (int)ViewData["PageSize"];
+    var totalPages = (int)ViewData["TotalPages"];
+}
+@if (totalPages > 0)
+{
+    <div>
+        <!--добавление ссылки на [первую страницу], если текущая(p) дальше второй: [1]... p-1 p p+1 ...n  -->
+        @if (page > 2)
+        {
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = 1, pageSize })" class="btn btn-primary">1</a>
+            </span>
+        }
+        <!--добавление ссылок на [текущую и соседние страницы]: 1... [p-1 p p+1] ...n  -->
+        @for (int i = page - 1; i <= totalPages; i++)
+        {
+            <!--если последняя страница, то добавить ссылки на предпоследнюю и последнюю активную и выйти: 1... n-1 n-->
+            if (page == totalPages)
+            {
+                <span class="btn btn-primary">
+                    <a href="@Url.Action("Index", new { page = totalPages-1, pageSize })" class="btn btn-primary">@(totalPages - 1)</a>
+                </span>
+                <span class="btn btn-primary">
+                    <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary active">@totalPages</a>
+                </span>
+                break;
+            }
+            <!--если предпослядняя страница, то добавить ссылки текущую и две соседние и выйти (без отрисовки последней дважды)-->
+            if (page == totalPages - 1)
+            {
+                <span class="btn btn-primary">
+                    <a href="@Url.Action("Index", new { page = totalPages-2, pageSize })" class="btn btn-primary">@(totalPages - 2)</a>
+                </span>
+                <span class="btn btn-primary">
+                    <a href="@Url.Action("Index", new { page = totalPages-1, pageSize })" class="btn btn-primary active">@(totalPages - 1)</a>
+                </span>
+                <span class="btn btn-primary">
+                    <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary">@totalPages</a>
+                </span>
+                break;
+            }
+            <!-- номер i страницы: не первая, не предпослденяя, не последняя и существует => отрисовать и продолжить цикл-->
+            if (i > 0 && i <= totalPages)
+            {
+                <span class="btn btn-primary">
+                    <a href="@Url.Action("Index", new { page = i, pageSize })" class="btn btn-primary @(page == i ? "active" : "")">@i</a>
+                </span>
+            }
+            <!--если отрисована кнопка следующей от текущей (p+1), то остановить отрисовку -->
+            if (i == page + 1)
+            {
+                break;
+            }
+        }
+        <!--добавление в конец последней страницы-->
+        @if ((totalPages - page) >= 2 && totalPages > 3)
+        {
+            <span class="btn btn-primary">
+                <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary @(page == totalPages ? "active" : "")">@totalPages</a>
+            </span>
+        }
+    </div>
+}

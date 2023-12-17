@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
+using RailwayTrafficSolution.ViewModels;
+using RailwayTrafficSolution.ViewModels.PositionViewModels;
 
 namespace RailwayTrafficSolution.Controllers
 {
@@ -21,11 +23,41 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Positions
-        public async Task<IActionResult> Index()
+        public async Task<IActionResult> Index(string name, int page = 1,
+            SortState sortOrder = SortState.NameAsc)
         {
-              return _context.Positions != null ? 
-                          View(await _context.Positions.ToListAsync()) :
-                          Problem("Entity set 'RailwayTrafficContext.Positions'  is null.");
+            var positions = _context.Positions.AsQueryable();
+            //фильтрация
+            if (!string.IsNullOrEmpty(name))
+            {
+                positions = positions.Where(p => p.PositionName!.Contains(name));
+            }
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SortState.SalaryDesc:
+                    positions = positions.OrderByDescending(s => s.SalaryUsd);
+                    break;
+                default:
+                    positions = positions.OrderBy(s => s.SalaryUsd);
+                    break;
+            }
+
+            // пагинация
+            int pageSize = 10;
+            var count = await positions.CountAsync();
+            var items = await positions.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            PositionIndexViewModel viewModel = new PositionIndexViewModel(
+                items,
+                new PageViewModel(count, page, pageSize),
+                new PositionFilterViewModel(name),
+                new PositionSortViewModel(sortOrder)
+            );
+
+            return View(viewModel);
         }
 
         // GET: Positions/Details/5

@@ -1,35 +1,52 @@
-﻿@model IEnumerable<RailwayTrafficSolution.Models.Schedule>
+﻿@using RailwayTrafficSolution.ViewModels.ScheduleViewModels;
+@model ScheduleIndexViewModel
 
 @{
-    ViewData["Title"] = "Записи расписания";
-
-    var page = (int)ViewData["Page"]; 
-    var pageSize = (int)ViewData["PageSize"]; 
-    var totalPages = (int)ViewData["TotalPages"];
+    ViewData["Title"] = "Расписание";
 }
 
-<h1>Записи расписания</h1>
+<h1>Расписание</h1>
 
 <p>
     <a asp-action="Create">Добавить новую запись</a>
 </p>
+<form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
+    <div class="form-group">
+        <h4>Фильтрация</h4>
+    </div>
+    <div class="form-group">
+        <label>Поезд: </label>
+        <select name="train" asp-items="Model.FilterViewModel.Trains" class="form-control"></select>
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label>Остановка: </label>
+        <select name="stop" asp-items="Model.FilterViewModel.Stops" class="form-control"></select>
+    </div>
+    <p></p>
+    <input type="submit" value="Применить" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-primary">Сбросить фильтр</a>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                @Html.DisplayNameFor(model => model.DayOfWeek)
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.DayOfWeekSort)"
+                   asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+                   asp-route-stop="@(Model.FilterViewModel.SelectedStop)">Имя сотрудника</a>
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Train)
+                Поезд
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.Stop)
+                Остановка
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.ArrivalTime)
+                Время прибытия
             </th>
             <th>
-                @Html.DisplayNameFor(model => model.DepartureTime)
+                Время отправки
             </th>
             @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
             {
@@ -39,16 +56,16 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.Schedules) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DayOfWeek)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Train.TrainNumber)
+                @Html.DisplayFor(modelItem => item!.Train!.TrainNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Stop.Name)
+                @Html.DisplayFor(modelItem => item!.Stop!.Name)
             </td>
             <td>
                 @Html.DisplayFor(modelItem => item.ArrivalTime)
@@ -69,54 +86,50 @@
 }
     </tbody>
 </table>
-
 <div>
-    @if (page > 2 )
+    <a asp-action="Index"
+       asp-route-page="@(1)"
+       asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+       asp-route-stop="@(Model.FilterViewModel.SelectedStop)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-primary">
+        1
+    </a>
+    <button type="button" class="btn btn-lg btn-primary" disabled>@Model.PageViewModel.PageNumber</button>
+    @if (Model.PageViewModel.TotalPages!=0)
     {
-        <span class="btn btn-primary">
-            <a href="@Url.Action("Index", new { page = 1, pageSize })" class="btn btn-primary">1</a>
-        </span>
+    <a asp-action="Index"
+       asp-route-page="@(Model.PageViewModel.TotalPages)"
+       asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+       asp-route-stop="@(Model.FilterViewModel.SelectedStop)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-primary">
+        @Model.PageViewModel.TotalPages
+    </a>       
     }
-    @for (int i = page - 1; i <= totalPages; i++)
+</div>
+<p></p>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
     {
-        if (page == totalPages)
-        {
-            <span class="btn btn-primary">
-                <a href="@Url.Action("Index", new { page = totalPages-1, pageSize })" class="btn btn-primary">@(totalPages-1)</a>
-            </span>
-            <span class="btn btn-primary">
-                <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary active">@totalPages</a>
-            </span>
-            break;
-        }
-        if (page == totalPages-1)
-        {
-            <span class="btn btn-primary">
-                <a href="@Url.Action("Index", new { page = totalPages-2, pageSize })" class="btn btn-primary">@(totalPages -2)</a>
-            </span>
-            <span class="btn btn-primary">
-                <a href="@Url.Action("Index", new { page = totalPages-1, pageSize })" class="btn btn-primary active">@(totalPages-1)</a>
-            </span>
-            <span class="btn btn-primary">
-                <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary">@totalPages</a>
-            </span>
-            break;
-        }
-        if (i>0 && i <= totalPages)
-        {
-            <span class="btn btn-primary">
-                <a href="@Url.Action("Index", new { page = i, pageSize })" class="btn btn-primary @(page == i ? "active" : "")">@i</a>
-            </span> 
-        }
-        if(i==page+1)
-        {
-            break;
-        }
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+           asp-route-stop="@(Model.FilterViewModel.SelectedStop)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &lt;
+        </a>
     }
-    @if ((totalPages - page) >= 2 && totalPages>3)
+    @if (Model.PageViewModel.HasNextPage)
     {
-        <span class="btn btn-primary">
-            <a href="@Url.Action("Index", new { page = totalPages, pageSize })" class="btn btn-primary @(page == totalPages ? "active" : "")">@totalPages</a>
-        </span>
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+           asp-route-stop="@(Model.FilterViewModel.SelectedStop)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &gt;
+        </a>
     }
 </div>

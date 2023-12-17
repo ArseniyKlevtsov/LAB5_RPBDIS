@@ -3,6 +3,7 @@ using System.ComponentModel.DataAnnotations;
 
 namespace RailwayTrafficSolution.Models
 {
+    [Display(Name = "Сотрудник")]
     public class Employee
     {
         public int EmployeeId { get; set; }

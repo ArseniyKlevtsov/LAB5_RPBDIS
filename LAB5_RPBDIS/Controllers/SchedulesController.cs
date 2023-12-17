@@ -8,6 +8,8 @@ using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
+using RailwayTrafficSolution.ViewModels.ScheduleViewModels;
+using RailwayTrafficSolution.ViewModels;
 
 namespace RailwayTrafficSolution.Controllers
 {
@@ -21,17 +23,47 @@ namespace RailwayTrafficSolution.Controllers
         }
 
         // GET: Schedules
-        public async Task<IActionResult> Index(int page = 1, int pageSize = 10)
+        public async Task<IActionResult> Index(int train = 0, int stop = 0, int page = 1,
+            SortState sortOrder = SortState.DayOfWeekAsc)
         {
-            var totalItems = await _context.Schedules.CountAsync();
-            var railwayTrafficContext = _context.Schedules.Include(s => s.Stop).Include(s => s.Train).Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
-            if(totalItems% pageSize==0)
-                ViewData["TotalPages"] = totalItems/pageSize; 
-            else
-                ViewData["TotalPages"] = totalItems/pageSize+1; 
-            ViewData["Page"] = page;
-            ViewData["PageSize"] = pageSize;
-            return View(await railwayTrafficContext);
+            var trainStaffs = _context.Schedules.Include(t => t.Train).Include(t => t.Stop).AsQueryable();
+
+            //фильтрация
+            if (train != 0)
+            {
+                trainStaffs = trainStaffs.Where(p => p.TrainId == train);
+            }
+            if (stop != 0)
+            {
+                trainStaffs = trainStaffs.Where(p => p.StopId == stop);
+            }
+
+
+            // сортировка
+            switch (sortOrder)
+            {
+                case SortState.DayOfWeekAsc:
+                    trainStaffs = trainStaffs.OrderByDescending(s => s.DayOfWeek);
+                    break;
+                default:
+                    trainStaffs = trainStaffs.OrderBy(s => s.DayOfWeek);
+                    break;
+            }
+
+            // пагинация
+            int pageSize = 10;
+            var count = await trainStaffs.CountAsync();
+            var items = await trainStaffs.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+
+            // формируем модель представления
+            ScheduleIndexViewModel viewModel = new ScheduleIndexViewModel(
+                items,
+                new PageViewModel(count, page, pageSize),
+                new ScheduleFilterViewModel(_context.Trains.ToList(), train, _context.Stops.ToList(), stop),
+                new ScheduleSortViewModel(sortOrder)
+            );
+
+            return View(viewModel);
         }
 
         // GET: Schedules/Details/5

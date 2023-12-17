@@ -1,5 +1,5 @@
-﻿@model IEnumerable<RailwayTrafficSolution.Models.TrainStaff>
-
+﻿@using RailwayTrafficSolution.ViewModels.TrainStuffViewModels;
+@model TrainStuffIndexViewModel
 @{
     ViewData["Title"] = "Работники поездов";
 }
@@ -9,11 +9,32 @@
 <p>
     <a asp-action="Create">Добавить новую запись</a>
 </p>
+<form method="get" class="bg-primary bg-gradient p-2 rounded-3" style="--bs-bg-opacity: .3;">
+    <div class="form-group">
+        <h4>Фильтрация</h4>
+    </div>
+    <div class="form-group">
+        <label>Поезд: </label>
+        <select name="train" asp-items="Model.FilterViewModel.Trains" class="form-control"></select>
+    </div>
+    <p></p>
+    <div class="form-group">
+        <label>Сотрудник: </label>
+        <select name="employee" asp-items="Model.FilterViewModel.Employees" class="form-control"></select>
+    </div>
+    <p></p>
+    <input type="submit" value="Применить" class="btn btn-primary" />
+    <a asp-action="Index" class="btn btn-primary">Сбросить фильтр</a>
+</form>
 <table class="table">
     <thead>
         <tr>
             <th>
-                День недели
+                <a asp-action="Index"
+                   asp-route-sortOrder="@(Model.SortViewModel.DayOfWeekSort)"
+                   asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+                   asp-route-employee="@(Model.FilterViewModel.SelectedEmployee)">День недели</a>
+                
             </th>
             <th>
                 Поезд
@@ -28,16 +49,16 @@
         </tr>
     </thead>
     <tbody>
-@foreach (var item in Model) {
+@foreach (var item in Model.TrainStaffs) {
         <tr>
             <td>
                 @Html.DisplayFor(modelItem => item.DayOfWeek)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Train.TrainNumber)
+                @Html.DisplayFor(modelItem => item.Train!.TrainNumber)
             </td>
             <td>
-                @Html.DisplayFor(modelItem => item.Employee.EmployeeName)
+                @Html.DisplayFor(modelItem => item.Employee!.EmployeeName)
             </td>
                 @if (User.IsInRole("MainAdmin") || User.IsInRole("Admin"))
                 {
@@ -51,3 +72,53 @@
 }
     </tbody>
 </table>
+
+<div>
+
+
+    <a asp-action="Index"
+       asp-route-page="@(1)"
+       asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+       asp-route-employee="@(Model.FilterViewModel.SelectedEmployee)"
+       asp-route-sortorder="@(Model.SortViewModel.Current)"
+       class="btn btn-primary">
+        1
+    </a>
+    <button type="button" class="btn btn-lg btn-primary" disabled>@Model.PageViewModel.PageNumber</button>
+    @if (Model.PageViewModel.TotalPages != 0)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.TotalPages)"
+           asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+           asp-route-employee="@(Model.FilterViewModel.SelectedEmployee)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            @Model.PageViewModel.TotalPages
+        </a>
+    }
+</div>
+<p></p>
+<div>
+    @if (Model.PageViewModel.HasPreviousPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber - 1)"
+           asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+           asp-route-employee="@(Model.FilterViewModel.SelectedEmployee)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &lt;
+        </a>
+    }
+    @if (Model.PageViewModel.HasNextPage)
+    {
+        <a asp-action="Index"
+           asp-route-page="@(Model.PageViewModel.PageNumber + 1)"
+           asp-route-train="@(Model.FilterViewModel.SelectedTrain)"
+           asp-route-employee="@(Model.FilterViewModel.SelectedEmployee)"
+           asp-route-sortorder="@(Model.SortViewModel.Current)"
+           class="btn btn-primary">
+            &gt;
+        </a>
+    }
+</div>
