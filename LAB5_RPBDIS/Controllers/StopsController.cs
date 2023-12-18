@@ -86,6 +86,8 @@ namespace RailwayTrafficSolution.Controllers
             {
                 return NotFound();
             }
+
+            //фильтрация
             if (!String.IsNullOrEmpty(searchStartTimeString))
             {
                 int startTime = int.Parse(searchStartTimeString);
@@ -100,7 +102,17 @@ namespace RailwayTrafficSolution.Controllers
                 ViewBag.EndTime = endTime;
 
             }
-            return View(stop);
+
+            // сортировка
+            var sortedStop = new Stop()
+            {
+                StopId = stop.StopId,
+                Name = stop.Name,
+                HasWaitingRoom = stop.HasWaitingRoom,
+                IsRailwayStation = stop.IsRailwayStation,
+                Schedules = stop.Schedules.AsQueryable().OrderBy(s => s.DayOfWeek).ToList(),
+            };
+            return View(sortedStop);
         }
 
         // GET: Stops/Create

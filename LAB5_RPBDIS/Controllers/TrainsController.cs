@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Mvc;
 using Microsoft.AspNetCore.Mvc.Rendering;
 using Microsoft.EntityFrameworkCore;
 using RailwayTrafficSolution.Data;
 using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
-using System.Diagnostics;
 using RailwayTrafficSolution.ViewModels.TrainViewModels;
 using RailwayTrafficSolution.ViewModels;
 
@@ -109,16 +104,28 @@ namespace RailwayTrafficSolution.Controllers
             switch (sortOrder)
             {
                 case "arival_desc":
-                    sortedSchedules = train.Schedules.OrderByDescending(s => s.ArrivalTime).ToList();
+                    sortedSchedules = train.Schedules
+                        .OrderByDescending(s => s.DayOfWeek) // Сортировка по убыванию дня недели
+                        .ThenByDescending(s => s.ArrivalTime) // Затем сортировка по убыванию времени прибытия
+                        .ToList();
                     break;
                 case "departure":
-                    sortedSchedules = train.Schedules.OrderBy(s => s.DepartureTime).ToList();
+                    sortedSchedules = train.Schedules
+                        .OrderBy(s => s.DayOfWeek) // Сортировка по возрастанию дня недели
+                        .ThenBy(s => s.DepartureTime) // Затем сортировка по возрастанию времени отправления
+                        .ToList();
                     break;
                 case "departure_desc":
-                    sortedSchedules = train.Schedules.OrderByDescending(s => s.DepartureTime).ToList();
+                    sortedSchedules = train.Schedules
+                        .OrderByDescending(s => s.DayOfWeek) // Сортировка по возрастанию дня недели
+                        .ThenByDescending(s => s.DepartureTime) // Затем сортировка по убыванию времени отправления
+                        .ToList();
                     break;
                 default:
-                    sortedSchedules = train.Schedules.OrderBy(s => s.ArrivalTime).ToList();
+                    sortedSchedules = train.Schedules
+                        .OrderBy(s => s.DayOfWeek) // Сортировка по возрастанию дня недели
+                        .ThenBy(s => s.ArrivalTime) // Затем сортировка по возрастанию времени прибытия
+                        .ToList();
                     break;
             }
 

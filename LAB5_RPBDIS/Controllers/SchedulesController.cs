@@ -27,16 +27,16 @@ namespace RailwayTrafficSolution.Controllers
         public async Task<IActionResult> Index(int train = 0, int stop = 0, int page = 1,
             SortState sortOrder = SortState.DayOfWeekAsc)
         {
-            var trainStaffs = _context.Schedules.Include(t => t.Train).Include(t => t.Stop).AsQueryable();
+            var schedules = _context.Schedules.Include(t => t.Train).Include(t => t.Stop).AsQueryable();
 
             //фильтрация
             if (train != 0)
             {
-                trainStaffs = trainStaffs.Where(p => p.TrainId == train);
+                schedules = schedules.Where(p => p.TrainId == train);
             }
             if (stop != 0)
             {
-                trainStaffs = trainStaffs.Where(p => p.StopId == stop);
+                schedules = schedules.Where(p => p.StopId == stop);
             }
 
 
@@ -44,17 +44,17 @@ namespace RailwayTrafficSolution.Controllers
             switch (sortOrder)
             {
                 case SortState.DayOfWeekAsc:
-                    trainStaffs = trainStaffs.OrderByDescending(s => s.DayOfWeek);
+                    schedules = schedules.OrderByDescending(s => s.DayOfWeek);
                     break;
                 default:
-                    trainStaffs = trainStaffs.OrderBy(s => s.DayOfWeek);
+                    schedules = schedules.OrderBy(s => s.DayOfWeek);
                     break;
             }
 
             // пагинация
             int pageSize = 9;
-            var count = await trainStaffs.CountAsync();
-            var items = await trainStaffs.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
+            var count = await schedules.CountAsync();
+            var items = await schedules.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 
             // формируем модель представления
             ScheduleIndexViewModel viewModel = new ScheduleIndexViewModel(

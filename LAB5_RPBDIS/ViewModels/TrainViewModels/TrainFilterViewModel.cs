@@ -13,7 +13,7 @@ namespace RailwayTrafficSolution.ViewModels.TrainViewModels
         {
             trainTypes.Insert(0, new TrainType { TypeName = "Все", TrainTypeId = 0 });
 
-            TrainTypes = new SelectList(trainTypes, "TrainTypeId", "TypeName", name);
+            TrainTypes = new SelectList(trainTypes, "TrainTypeId", "TypeName", traintype);
             SelectedName = name;
         }
     }

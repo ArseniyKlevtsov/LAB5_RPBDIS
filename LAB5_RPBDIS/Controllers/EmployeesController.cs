@@ -6,6 +6,7 @@ using RailwayTrafficSolution.Models;
 using Microsoft.AspNetCore.Authorization;
 using RailwayTrafficSolution.ViewModels;
 using RailwayTrafficSolution.ViewModels.EmployeeViewModels;
+using Bogus;
 
 namespace RailwayTrafficSolution.Controllers
 {
@@ -61,7 +62,7 @@ namespace RailwayTrafficSolution.Controllers
             }
 
             // пагинация
-            int pageSize =10;
+            int pageSize =8;
             var count = await employees.CountAsync();
             var items = await employees.Skip((page - 1) * pageSize).Take(pageSize).ToListAsync();
 

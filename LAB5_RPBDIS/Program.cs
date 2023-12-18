@@ -48,7 +48,7 @@ namespace RailwayTrafficSolution
 
             app.UseSession();
 
-            app.UseDbInitializer();
+            //app.UseDbInitializer();
 
             CultureInfo culture = new CultureInfo("ru-RU");
             culture.NumberFormat.NumberDecimalSeparator = ".";
